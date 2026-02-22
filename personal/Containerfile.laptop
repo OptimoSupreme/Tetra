@@ -9,8 +9,8 @@ RUN dnf install -y fastfetch git breeze-cursor-theme \
     systemctl enable gdm.service
 
 # Apply global GNOME dconf settings (cursor, fonts, window buttons)
-COPY dconf-profile /etc/dconf/profile/user
-COPY dconf-settings /etc/dconf/db/local.d/00-custom
+COPY config/dconf-profile /etc/dconf/profile/user
+COPY config/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
 # Add configurations and packages for personal computers here
