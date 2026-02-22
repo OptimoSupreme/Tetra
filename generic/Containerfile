@@ -1,0 +1,9 @@
+FROM quay.io/fedora/fedora-bootc:latest
+
+# Base generic desktop image
+# Install fastfetch and specific user config
+RUN dnf install -y fastfetch git && \
+    dnf clean all && \
+    git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch
+
+# Add user-friendly, non-technical configurations and packages here
