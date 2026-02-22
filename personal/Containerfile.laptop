@@ -9,7 +9,9 @@ RUN dnf install -y fastfetch git breeze-cursor-theme \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
 
-# Apply global GNOME dconf settings (cursor, fonts, window buttons)
+# Apply global GNOME dconf settings and wallpaper
+RUN rm -rf /usr/share/backgrounds/*
+COPY global_assets/wallpaper.jpg /usr/share/backgrounds/default.jpg
 COPY global_assets/dconf-profile /etc/dconf/profile/user
 COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
