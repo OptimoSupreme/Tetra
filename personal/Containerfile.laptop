@@ -10,8 +10,25 @@ RUN dnf install -y fastfetch git breeze-cursor-theme \
     systemctl enable gdm.service
 
 # Apply global GNOME dconf settings (cursor, fonts, window buttons)
-COPY config/dconf-profile /etc/dconf/profile/user
-COPY config/dconf-settings /etc/dconf/db/local.d/00-custom
+COPY global_assets/dconf-profile /etc/dconf/profile/user
+COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
 # Add configurations and packages for personal computers here
+
+# Create user 'justin' with a password hash provided via build arg.
+# To generate a secure hash, run: openssl passwd -6 "your_password"
+# You can then pass it during build: podman build --build-arg PASSWORD_HASH="..."
+ARG PASSWORD_HASH='$6$LbRJ9vDWbbOTSaba$MfApaj1PFMGL7R5CVGlR99jhTovgPktjE6c9xRf2G7D/rGDVPFARkoSHSGmaCG58vEG0MSUEWKHKMyLmFdtPy.'
+RUN useradd -m -c "Justin" -G wheel -p "$PASSWORD_HASH" -s /bin/bash justin
+
+# Set up profile picture for the user
+# The profile.png image must exist in the global_assets/ directory
+COPY global_assets/profile.png /var/lib/AccountsService/icons/justin
+RUN mkdir -p /var/lib/AccountsService/users && \
+    cat <<EOF > /var/lib/AccountsService/users/justin
+[User]
+Session=
+Icon=/var/lib/AccountsService/icons/justin
+SystemAccount=false
+EOF
