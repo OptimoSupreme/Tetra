@@ -24,7 +24,7 @@ RUN useradd -m -c "Justin" -G wheel -p "$PASSWORD_HASH" -s /bin/bash justin
 
 # Set up profile picture for the user
 # The profile.png image must exist in the personal/assets/ directory
-COPY assets/profile.png /var/lib/AccountsService/icons/justin
+COPY personal/assets/profile.png /var/lib/AccountsService/icons/justin
 RUN mkdir -p /var/lib/AccountsService/users && \
     cat <<EOF > /var/lib/AccountsService/users/justin
 [User]
