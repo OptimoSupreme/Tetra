@@ -23,8 +23,8 @@ ARG PASSWORD_HASH='$6$LbRJ9vDWbbOTSaba$MfApaj1PFMGL7R5CVGlR99jhTovgPktjE6c9xRf2G
 RUN useradd -m -c "Justin" -G wheel -p "$PASSWORD_HASH" -s /bin/bash justin
 
 # Set up profile picture for the user
-# The profile.png image must exist in the global_assets/ directory
-COPY global_assets/profile.png /var/lib/AccountsService/icons/justin
+# The profile.png image must exist in the personal/assets/ directory
+COPY assets/profile.png /var/lib/AccountsService/icons/justin
 RUN mkdir -p /var/lib/AccountsService/users && \
     cat <<EOF > /var/lib/AccountsService/users/justin
 [User]
