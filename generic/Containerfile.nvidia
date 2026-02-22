@@ -10,11 +10,16 @@ RUN dnf install -y \
     dnf clean all
 
 # Base generic desktop image with NVIDIA support
-# Install fastfetch, config, and GNOME Desktop
-RUN dnf install -y fastfetch git \
+# Install fastfetch, config, GNOME Desktop, and cursor theme
+RUN dnf install -y fastfetch git breeze-cursor-theme \
     @workstation-product-environment && \
     dnf clean all && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
+
+# Apply global GNOME dconf settings (cursor, fonts, window buttons)
+COPY dconf-profile /etc/dconf/profile/user
+COPY dconf-settings /etc/dconf/db/local.d/00-custom
+RUN dconf update
 
 # Add user-friendly, non-technical configurations and packages here

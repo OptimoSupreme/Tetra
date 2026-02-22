@@ -1,6 +1,6 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
-# Base generic desktop image
+# Base workstation image
 # Install fastfetch, config, GNOME Desktop, and cursor theme
 RUN dnf install -y fastfetch git breeze-cursor-theme \
     @workstation-product-environment && \
@@ -13,4 +13,4 @@ COPY dconf-profile /etc/dconf/profile/user
 COPY dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
-# Add user-friendly, non-technical configurations and packages here
+# Add configurations and packages for personal computers here

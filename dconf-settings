@@ -1,0 +1,6 @@
+[org/gnome/desktop/interface]
+cursor-theme='Breeze_Snow'
+font-antialiasing='rgba'
+
+[org/gnome/desktop/wm/preferences]
+button-layout='appmenu:minimize,close'

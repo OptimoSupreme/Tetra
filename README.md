@@ -28,7 +28,9 @@ To build ISOs or other installation media from these images, we use the `bootc-i
 
 ### 1. Setting up the Builder
 
-Podman is required because it can easily access your local container storage when building images locally. To make running the builder easy, add this alias to your `~/.bashrc`:
+`bootc-image-builder` strictly requires "rootful" execution because it performs low-level filesystem operations (like writing to raw disks or loopback interfaces).
+
+Add this alias to your `~/.bashrc`:
 
 ```bash
 alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v "$(pwd)":/output -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest'
@@ -36,14 +38,15 @@ alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --
 
 ### 2. Building an Image
 
-Before building the disk image, you first need to build your Containerfile into a local image (if you haven't published it to a registry yet):
+Because the builder must run as root, your local container image must exist in **root's** podman storage. If you've been building your images as a regular user, use `sudo podman build` instead:
+
 ```bash
-podman build -t localhost/workstation:latest -f workstation/Containerfile .
+sudo podman build -t localhost/workstation:latest -f workstation/Containerfile .
 ```
 
-Then, use the alias to build your preferred output format. The `--local` flag tells the builder to pull the image from your local Podman storage:
+Then, use the alias to build your preferred output format. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
 ```bash
-bootc-image-builder build --type qcow2 --local localhost/workstation:latest
+bootc-image-builder build --type qcow2 --rootfs ext4 --local localhost/workstation:latest
 ```
 
 The output will be placed in an `output/` directory in your current path.
