@@ -10,9 +10,11 @@ RUN dnf install -y \
     dnf clean all
 
 # Base generic desktop image with NVIDIA support
-# Install fastfetch and specific user config
-RUN dnf install -y fastfetch git && \
+# Install fastfetch, config, and GNOME Desktop
+RUN dnf install -y fastfetch git \
+    @workstation-product-environment && \
     dnf clean all && \
-    git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch
+    git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
+    systemctl enable gdm.service
 
 # Add user-friendly, non-technical configurations and packages here
