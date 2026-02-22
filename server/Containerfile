@@ -1,9 +1,9 @@
-FROM quay.io/fedora/fedora-bootc:latest
+FROM quay.io/fedora/fedora-coreos:stable
 
 # Base server image
 # Install fastfetch and specific user config
-RUN dnf install -y fastfetch git && \
-    dnf clean all && \
+RUN rpm-ostree install -y fastfetch git && \
+    ostree container commit && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch
 
 # Add configurations and packages for the server here

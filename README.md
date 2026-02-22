@@ -12,7 +12,7 @@ Our goal is to build and maintain three distinct images:
 - **NVIDIA Variant:** `workstation/Containerfile.nvidia`
 
 ### 2. Server Image (`server/Containerfile`)
-- **Description:** An optimized, headless image designed for running on the home server.
+- **Description:** An optimized, headless image based on **Fedora CoreOS**, designed for running containerized workloads on the home server.
 - **Features:** *(To be defined)*
 
 ### 3. Generic Desktop Image (`generic/Containerfile`)
