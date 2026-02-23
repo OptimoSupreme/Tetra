@@ -4,23 +4,24 @@ This repository contains the configuration and Containerfiles for building custo
 
 ## Available Images
 
-Our goal is to build and maintain three distinct images:
+This repository maintains the following images:
 
-### 1. Workstation Image (`workstation/Containerfile`)
-- **Description:** A customized workstation image tailored specifically for my personal use, development environment, and my own computers.
-- **Features:** *(To be defined)*
-- **NVIDIA Variant:** `workstation/Containerfile.nvidia`
+### 1. Personal Desktop Image (`personal/Containerfile.desktop`)
+- **Description:** A customized Fedora workstation image tailored specifically for my personal desktop computer ("balrog").
+- **Features:** Pre-configured user profile, custom wallpapers, GNOME Desktop, fastfetch, and optimized default applications.
 
-### 2. Server Image (`personal/Containerfile.server`)
-- **Description:** An optimized, headless image based on **Fedora CoreOS**, designed for running containerized workloads on the home server.
-- **Features:** *(To be defined)*
+### 2. Personal Laptop Image (`personal/Containerfile.laptop`)
+- **Description:** A customized Fedora workstation image specifically for my personal laptop ("nazgul").
+- **Features:** Shares the same core features as the desktop image, pre-configured user profile, and custom GNOME settings.
 
-### 3. Generic Desktop Image (`generic/Containerfile`)
-- **Description:** A polished, user-friendly, and stable image aimed at non-technical users. It provides an out-of-the-box experience suitable for anyone's personal computer.
-- **Features:** *(To be defined)*
+### 3. Personal Server Image (`personal/Containerfile.server`)
+- **Description:** An optimized, headless image based on Fedora ("morgoth"), designed for running containerized workloads on the home server.
+- **Features:** Includes LTS kernel, ZFS support, Docker, fastfetch, and screen.
+
+### 4. Generic Desktop Image (`generic/Containerfile`)
+- **Description:** A polished, user-friendly, and stable image aimed at non-technical users. It provides an out-of-the-box experience suitable for general use.
+- **Features:** Standard environment without personal files or tailored credentials.
 - **NVIDIA Variant:** `generic/Containerfile.nvidia`
-
-*(Note: The descriptions and feature lists will be updated as we build out the respective Containerfiles.)*
 
 ## Building Installation Media
 
