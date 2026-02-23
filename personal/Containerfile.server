@@ -2,7 +2,7 @@ FROM quay.io/fedora/fedora-bootc:43
 
 # Base server image
 # Enable LTS kernel COPR
-COPY kwizart-kernel-longterm.repo /etc/yum.repos.d/kwizart-kernel-longterm.repo
+COPY assets/kwizart-kernel-longterm.repo /etc/yum.repos.d/kwizart-kernel-longterm.repo
 
 # Configure repos, swap to LTS kernel, install tools, and configure fastfetch
 RUN dnf install -y https://zfsonlinux.org/fedora/zfs-release-3-0$(rpm -E %dist).noarch.rpm && \
