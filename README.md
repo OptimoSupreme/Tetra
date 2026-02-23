@@ -2,27 +2,6 @@
 
 This repository contains the configuration and Containerfiles for building custom, bootable, atomic Fedora Linux images using `bootc` (ostree + containers).
 
-## Available Images
-
-This repository maintains the following images:
-
-### 1. Personal Desktop Image (`personal/Containerfile.desktop`)
-- **Description:** A customized Fedora workstation image tailored specifically for my personal desktop computer ("balrog").
-- **Features:** Pre-configured user profile, custom wallpapers, GNOME Desktop, fastfetch, and optimized default applications.
-
-### 2. Personal Laptop Image (`personal/Containerfile.laptop`)
-- **Description:** A customized Fedora workstation image specifically for my personal laptop ("nazgul").
-- **Features:** Shares the same core features as the desktop image, pre-configured user profile, and custom GNOME settings.
-
-### 3. Personal Server Image (`personal/Containerfile.server`)
-- **Description:** An optimized, headless image based on Fedora ("morgoth"), designed for running containerized workloads on the home server.
-- **Features:** Includes LTS kernel, ZFS support, Docker, fastfetch, and screen.
-
-### 4. Generic Desktop Image (`generic/Containerfile`)
-- **Description:** A polished, user-friendly, and stable image aimed at non-technical users. It provides an out-of-the-box experience suitable for general use.
-- **Features:** Standard environment without personal files or tailored credentials.
-- **NVIDIA Variant:** `generic/Containerfile.nvidia`
-
 ## Building Installation Media
 
 To build ISOs or other installation media from these images, we use the `bootc-image-builder` container in podman.
