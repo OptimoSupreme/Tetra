@@ -34,3 +34,6 @@ Session=
 Icon=/var/lib/AccountsService/icons/justin
 SystemAccount=false
 EOF
+
+# Set Hostname
+RUN echo "nazgul" > /etc/hostname

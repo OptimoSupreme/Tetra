@@ -1,9 +1,17 @@
-FROM quay.io/fedora/fedora-bootc:latest
+FROM quay.io/fedora/fedora-bootc:43
 
 # Base server image
-# Install fastfetch and specific user config
-RUN dnf install -y fastfetch git && \
-    dnf clean all && \
-    git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch
+# Enable LTS kernel COPR
+COPY kwizart-kernel-longterm.repo /etc/yum.repos.d/kwizart-kernel-longterm.repo
 
-# Add configurations and packages for the server here
+# Configure repos, swap to LTS kernel, install tools, and configure fastfetch
+RUN dnf install -y https://zfsonlinux.org/fedora/zfs-release-3-0$(rpm -E %dist).noarch.rpm && \
+    dnf swap -y kernel-core kernel-longterm-core --allowerasing && \
+    dnf install -y kernel-longterm kernel-longterm-devel \
+    kernel-longterm-modules kernel-longterm-modules-extra \
+    zfs screen docker fastfetch git && \
+    git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
+    dnf clean all
+
+# Set Hostname
+RUN echo "morgoth" > /etc/hostname
