@@ -14,8 +14,6 @@ Vertex: The exact point where two or more lines meet to form an angle (like the 
 
 Tetra: Short for tetrahedron (a three-dimensional triangle/pyramid). It sounds like a massive, heavy-duty Earth corporation (e.g., "Tetra Dynamics") that builds hardware designed to take a beating in the deep mines of Hoxxes IV.
 
-Strut: A structural component designed to resist compression. It's gritty, functional, and deeply tied to keeping physical things standing.
-
 Tectonic: Relates to the massive, structural plates of the Earth's crust. It implies your creations are foundational, immensely powerful, and built on a planetary scale. A triangular logo with "TECTONIC" next to it looks heavy and premium.
 
 Lithos: The Greek word for stone. It carries that Asuran "floating stone architecture" vibe while remaining a completely Earth-born, historical word.
