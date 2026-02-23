@@ -18,6 +18,21 @@ RUN dconf update
 
 # Add configurations and packages for personal computers here
 
+# Install RPM Fusion free & nonfree repos
+RUN dnf install -y \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+    dnf clean all
+
+# Switch to full ffmpeg and install additional multimedia codecs
+RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf clean all
+
+# Install Intel hardware acceleration codecs
+RUN dnf install -y intel-media-driver && \
+    dnf clean all
+
 # Create user 'justin' with a password hash provided via build arg.
 # To generate a secure hash, run: openssl passwd -6 "your_password"
 # You can then pass it during build: podman build --build-arg PASSWORD_HASH="..."

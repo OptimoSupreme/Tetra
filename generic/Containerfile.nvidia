@@ -26,3 +26,12 @@ COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
 # Add user-friendly, non-technical configurations and packages here
+
+# Switch to full ffmpeg and install additional multimedia codecs
+RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf clean all
+
+# Install Nvidia hardware acceleration codecs
+RUN dnf install -y libva-nvidia-driver && \
+    dnf clean all

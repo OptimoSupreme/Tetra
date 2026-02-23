@@ -17,3 +17,19 @@ COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
 # Add user-friendly, non-technical configurations and packages here
+
+# Install RPM Fusion free & nonfree repos
+RUN dnf install -y \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+    dnf clean all
+
+# Switch to full ffmpeg and install additional multimedia codecs
+RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf clean all
+
+# Install Intel and AMD hardware acceleration codecs
+RUN dnf install -y intel-media-driver && \
+    dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld && \
+    dnf clean all
