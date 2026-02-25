@@ -1,0 +1,2 @@
+theme = catppuccin-mocha
+command = /usr/bin/bash --noprofile --rcfile /etc/ghostty/bashrc_bypass
