@@ -6,8 +6,8 @@ font-antialiasing='rgba'
 button-layout='appmenu:minimize,close'
 
 [org/gnome/desktop/background]
-picture-uri='file:///usr/share/backgrounds/default.jpg'
-picture-uri-dark='file:///usr/share/backgrounds/default.jpg'
+picture-uri='file:///usr/share/backgrounds/default.png'
+picture-uri-dark='file:///usr/share/backgrounds/default.png'
 
 [org/gnome/desktop/screensaver]
-picture-uri='file:///usr/share/backgrounds/default.jpg'
+picture-uri='file:///usr/share/backgrounds/default.png'

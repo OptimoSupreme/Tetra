@@ -26,7 +26,7 @@ sudo podman build -t localhost/workstation:latest -f personal/Containerfile.desk
 
 Then, use the alias to build your preferred output format. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
 ```bash
-bootc-image-builder build --type qcow2 --rootfs ext4 --local localhost/personal-desktop:latest
+bootc-image-builder build --type qcow2 --rootfs ext4 --local localhost/workstation:latest:latest
 ```
 
 The output will be placed in an `output/` directory in your current path.
