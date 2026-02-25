@@ -4,7 +4,17 @@ FROM quay.io/fedora/fedora-bootc:latest
 # Package Modifications (Drivers & Kernels)
 # ==============================================================================
 # Disable PackageKit to prevent "Authentication is required to update software" popups
-RUN systemctl mask packagekit.service packagekit-offline-update.service
+# Disable systemd-remount-fs.service to prevent failure on read-only bootc systems
+RUN systemctl mask packagekit.service packagekit-offline-update.service systemd-remount-fs.service
+
+# Enable third party repos by default
+RUN mkdir -p /etc/xdg/gnome-software && \
+    cat > /etc/xdg/gnome-software/gnome-software-local.cfg <<EOF
+[GNOME Software]
+ShowRequiresRestart=true
+ShowThirdPartyRepos=true
+ShowUpgradeThirdPartyReleases=true
+EOF
 
 # Install RPM Fusion and NVIDIA drivers
 # Note: Building the akmod requires kernel-devel and compiling the module for the container's kernel
@@ -37,7 +47,7 @@ RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     mkdir -p /usr/share/glib-2.0/schemas && \
-    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'" > /usr/share/glib-2.0/schemas/99-custom-cursor.gschema.override && \
+    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'" > /usr/share/glib-2.0/schemas/99-custom-cursor.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Replace Plymouth spinner and watermark with custom trademark (if plymouth is installed)
