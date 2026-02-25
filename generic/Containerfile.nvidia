@@ -3,6 +3,9 @@ FROM quay.io/fedora/fedora-bootc:latest
 # ==============================================================================
 # Package Modifications (Drivers & Kernels)
 # ==============================================================================
+# Disable PackageKit to prevent "Authentication is required to update software" popups
+RUN systemctl mask packagekit.service packagekit-offline-update.service
+
 # Install RPM Fusion and NVIDIA drivers
 # Note: Building the akmod requires kernel-devel and compiling the module for the container's kernel
 RUN dnf install -y \
@@ -30,7 +33,12 @@ RUN rm -rf /usr/share/backgrounds/*
 COPY global_assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY global_assets/dconf-profile /etc/dconf/profile/user
 COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
-RUN dconf update
+RUN dconf update && \
+    mkdir -p /usr/share/icons/default && \
+    echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
+    mkdir -p /usr/share/glib-2.0/schemas && \
+    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'" > /usr/share/glib-2.0/schemas/99-custom-cursor.gschema.override && \
+    glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Replace Plymouth spinner and watermark with custom trademark (if plymouth is installed)
 COPY global_assets/trademark.png /tmp/trademark.png
