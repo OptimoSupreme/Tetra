@@ -41,9 +41,12 @@ RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
 # ==============================================================================
 # Package Modifications
 # ==============================================================================
-# Disable PackageKit to prevent "Authentication is required to update software" popups
+# Add polkit rule to prevent "Authentication is required to update software" popups
 # Disable systemd-remount-fs.service to prevent failure on read-only bootc systems
-RUN systemctl mask packagekit.service packagekit-offline-update.service systemd-remount-fs.service
+# Enable bootc-fetch-apply-updates.timer to automatically pull and stage system updates
+COPY global_assets/10-packagekit-noauth.rules /etc/polkit-1/rules.d/
+RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service && \
+    systemctl enable bootc-fetch-apply-updates.timer
 
 # Enable third party repos by default
 RUN mkdir -p /etc/xdg/gnome-software && \
