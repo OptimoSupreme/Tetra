@@ -1,14 +1,19 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
+# ==============================================================================
+# Base Image & Core Packages
+# ==============================================================================
 # Base workstation image
 # Install fastfetch, config, GNOME Desktop, and cursor theme
 RUN dnf install -y fastfetch git breeze-cursor-theme \
     @workstation-product-environment && \
     dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs malcontent gnome-tour yelp && \
-    dnf clean all && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
 
+# ==============================================================================
+# System Configuration
+# ==============================================================================
 # Apply global GNOME dconf settings and wallpaper
 RUN rm -rf /usr/share/backgrounds/*
 COPY global_assets/wallpaper.jpg /usr/share/backgrounds/default.jpg
@@ -16,22 +21,37 @@ COPY global_assets/dconf-profile /etc/dconf/profile/user
 COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update
 
-# Add configurations and packages for personal computers here
+# Set Hostname
+RUN echo "nazgul" > /etc/hostname
 
+# Replace Plymouth spinner and watermark with custom trademark (if plymouth is installed)
+COPY global_assets/trademark.png /tmp/trademark.png
+RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
+    cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/watermark.png && \
+    for i in $(seq -w 1 30); do \
+    cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
+    done; \
+    fi
+
+# ==============================================================================
+# Package Modifications
+# ==============================================================================
 # Install RPM Fusion free & nonfree repos
 RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
-    dnf clean all
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 # Switch to full ffmpeg and install additional multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
-    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
-    dnf clean all
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
 # Install Intel hardware acceleration codecs
-RUN dnf install -y intel-media-driver && \
-    dnf clean all
+RUN dnf install -y intel-media-driver
+
+# ==============================================================================
+# User Environment
+# ==============================================================================
+# Add configurations and packages for personal computers here
 
 # Create user 'justin' with a password hash provided via build arg.
 # To generate a secure hash, run: openssl passwd -6 "your_password"
@@ -50,5 +70,8 @@ Icon=/var/lib/AccountsService/icons/justin
 SystemAccount=false
 EOF
 
-# Set Hostname
-RUN echo "nazgul" > /etc/hostname
+# ==============================================================================
+# Housekeeping
+# ==============================================================================
+RUN dnf autoremove -y && \
+    dnf clean all
