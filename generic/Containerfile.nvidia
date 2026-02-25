@@ -41,6 +41,8 @@ RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick \
 # ==============================================================================
 # System Configuration
 # ==============================================================================
+# Rename OS in GRUB and Fastfetch
+RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 # Apply global GNOME dconf settings and wallpaper
 RUN rm -rf /usr/share/backgrounds/*
 COPY global_assets/wallpaper.png /usr/share/backgrounds/default.png
