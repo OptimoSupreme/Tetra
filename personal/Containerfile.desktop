@@ -7,7 +7,7 @@ FROM quay.io/fedora/fedora-bootc:latest
 # Install fastfetch, config, GNOME Desktop, and cursor theme
 RUN dnf install -y fastfetch git breeze-cursor-theme \
     @workstation-product-environment && \
-    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs malcontent gnome-tour yelp && \
+    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
 
