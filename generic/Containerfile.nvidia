@@ -50,10 +50,10 @@ RUN dconf update && \
     echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'" > /usr/share/glib-2.0/schemas/99-custom-cursor.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
-# Replace Plymouth spinner and watermark with custom trademark (if plymouth is installed)
+# Replace Plymouth spinner with custom trademark and remove watermark (if plymouth is installed)
 COPY global_assets/trademark.png /tmp/trademark.png
 RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
-    cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/watermark.png && \
+    rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
     cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
     done; \
