@@ -5,9 +5,9 @@ FROM quay.io/fedora/fedora-bootc:latest
 # ==============================================================================
 # Base workstation image
 # Install fastfetch, config, GNOME Desktop, and cursor theme
-RUN dnf install -y fastfetch git breeze-cursor-theme \
+RUN dnf install -y fastfetch git breeze-cursor-theme imagemagick \
     @workstation-product-environment && \
-    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp && \
+    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp ptyxis && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
 
@@ -62,6 +62,10 @@ RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
+# Install ghostty terminal emulator
+RUN dnf copr enable -y scottames/ghostty && \
+    dnf install -y ghostty
+
 # Switch to full ffmpeg and install additional multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
@@ -73,6 +77,9 @@ RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
 # User Environment
 # ==============================================================================
 # Add configurations and packages for personal computers here
+
+# Run fastfetch on login
+RUN echo "fastfetch" >> /etc/bashrc
 
 # Create user 'justin' with a password hash provided via build arg.
 # To generate a secure hash, run: openssl passwd -6 "your_password"

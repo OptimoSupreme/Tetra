@@ -4,9 +4,9 @@ FROM quay.io/fedora/fedora-bootc:latest
 # Base Image & Core Packages
 # ==============================================================================
 # Install fastfetch, config, GNOME Desktop, and cursor theme
-RUN dnf install -y fastfetch git breeze-cursor-theme \
+RUN dnf install -y fastfetch git breeze-cursor-theme imagemagick \
     @workstation-product-environment && \
-    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp && \
+    dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp ptyxis && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     systemctl enable gdm.service
 
@@ -66,10 +66,17 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
 RUN dnf install -y intel-media-driver && \
     dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
 
+# Install ghostty terminal emulator
+RUN dnf copr enable -y scottames/ghostty && \
+    dnf install -y ghostty
+
 # ==============================================================================
 # User Environment
 # ==============================================================================
 # Add user-friendly, non-technical configurations and packages here
+
+# Run fastfetch on login
+RUN echo "fastfetch" >> /etc/bashrc
 
 # ==============================================================================
 # Housekeeping
