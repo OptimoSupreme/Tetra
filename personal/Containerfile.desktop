@@ -29,19 +29,19 @@ RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     mkdir -p /usr/share/glib-2.0/schemas && \
-    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'" > /usr/share/glib-2.0/schemas/99-custom-cursor.gschema.override && \
+    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Set Hostname
 RUN echo "balrog" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - balrog" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
-# Replace Plymouth spinner with custom trademark and remove watermark
-COPY global_assets/trademark.png /tmp/trademark.png
+# Replace Plymouth spinner and GDM login screen with custom trademark
+COPY global_assets/trademark.png /usr/share/pixmaps/trademark.png
 RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
     rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
-    cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
+    cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
     done; \
     fi
 
