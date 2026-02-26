@@ -48,8 +48,9 @@ RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
 # ==============================================================================
 # Package Modifications
 # ==============================================================================
-# Disable systemd-remount-fs.service to prevent failure on read-only bootc systems
-RUN systemctl mask systemd-remount-fs.service
+# Disable systemd-remount-fs.service and PackageKit update services to prevent failure on read-only bootc systems and silence auth popups
+COPY global_assets/10-packagekit-noauth.rules /etc/polkit-1/rules.d/
+RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service
 
 # Install RPM Fusion free & nonfree repos
 RUN dnf install -y \

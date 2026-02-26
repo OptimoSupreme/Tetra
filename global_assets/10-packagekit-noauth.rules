@@ -1,0 +1,7 @@
+// Allow users in the wheel group to perform PackageKit actions without a password prompt
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.freedesktop.packagekit.") == 0 &&
+        subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});
