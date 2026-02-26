@@ -80,8 +80,8 @@ RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
 # ==============================================================================
 # Add configurations and packages for personal computers here
 
-# Run fastfetch on login
-RUN echo "fastfetch" >> /etc/bashrc
+# Run fastfetch on interactive shells, but only once per initialization
+RUN echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
 
 # Create user 'justin' with a password hash provided via build arg.
 # To generate a secure hash, run: openssl passwd -6 "your_password"
