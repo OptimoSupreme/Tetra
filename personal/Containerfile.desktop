@@ -23,13 +23,14 @@ RUN rm -rf /usr/share/backgrounds/*
 COPY global_assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY global_assets/dconf-profile /etc/dconf/profile/user
 COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
+COPY personal/assets/dash-to-panel.conf /etc/dconf/db/local.d/01-dash-to-panel
 COPY global_assets/90-corectrl.rules /etc/polkit-1/rules.d/90-corectrl.rules
 COPY global_assets/amdgpu.toml /usr/lib/bootc/kargs.d/01-amdgpu.toml
 RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     mkdir -p /usr/share/glib-2.0/schemas && \
-    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
+    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'\n\n[org.gnome.shell.extensions.blur-my-shell.appfolder]\nstyle-dialogs=1\n\n[org.gnome.shell.extensions.blur-my-shell.dash-to-dock]\noverride-background=false\n\n[org.gnome.shell.extensions.blur-my-shell.panel]\noverride-background=false" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Set Timezone and Enable Internet Time
@@ -81,27 +82,12 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
 # Install AMD hardware acceleration codecs
 RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
 
-# Install Flatpaks
-RUN flatpak install -y \
-    app.drey.Warp \
-    com.dec05eba.gpu_screen_recorder \
-    com.discordapp.Discord \
-    com.mattjakeman.ExtensionManager \
-    com.github.iwalton3.jellyfin-media-player \
-    com.github.k4zmu2a.spacecadetpinball \
-    com.google.Chrome \
-    com.slack.Slack \
-    com.spotify.Client \
-    com.valvesoftware.Steam \
-    com.valvesoftware.Steam.CompatibilityTool.Proton-GE \
-    com.vixalien.sticky \
-    de.haeckerfelix.Shortwave \
-    org.freecad.FreeCAD \
-    org.gimp.GIMP \
-    org.gnome.Fractal \
-    org.localsend.localsend_app \
-    org.onlyoffice.desktopeditors \
-    us.zoom.Zoom
+# Install GNOME Extensions
+RUN dnf install -y \
+    gnome-shell-extension-appindicator \
+    gnome-shell-extension-blur-my-shell \
+    gnome-shell-extension-caffeine \
+    gnome-shell-extension-dash-to-panel
 
 # ==============================================================================
 # User Environment
