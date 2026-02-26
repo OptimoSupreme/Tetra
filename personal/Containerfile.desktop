@@ -5,7 +5,7 @@ FROM quay.io/fedora/fedora-bootc:latest
 # ==============================================================================
 # Base workstation image
 # Install fastfetch, config, GNOME Desktop, and cursor theme
-RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick corectrl \
+RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick corectrl btrfs-assistant \
     @workstation-product-environment && \
     dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp ptyxis && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
@@ -86,6 +86,7 @@ RUN flatpak install -y \
     app.drey.Warp \
     com.dec05eba.gpu_screen_recorder \
     com.discordapp.Discord \
+    com.mattjakeman.ExtensionManager \
     com.github.iwalton3.jellyfin-media-player \
     com.github.k4zmu2a.spacecadetpinball \
     com.google.Chrome \
