@@ -13,6 +13,9 @@ COPY assets/kwizart-kernel-longterm.repo /etc/yum.repos.d/kwizart-kernel-longter
 # Disable systemd-remount-fs.service to prevent failure on read-only bootc systems
 RUN systemctl mask systemd-remount-fs.service
 
+# Remove Plymouth completely
+RUN dnf remove -y plymouth
+
 # Configure repos, swap to LTS kernel, install tools, configure Docker, and configure fastfetch
 RUN dnf install -y https://zfsonlinux.org/fedora/zfs-release-3-0$(rpm -E %dist).noarch.rpm && \
     dnf swap -y kernel-core kernel-longterm-core --allowerasing && \
@@ -31,15 +34,6 @@ RUN dnf install -y https://zfsonlinux.org/fedora/zfs-release-3-0$(rpm -E %dist).
 RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 # Set Hostname
 RUN echo "morgoth" > /etc/hostname
-
-# Replace Plymouth spinner with custom trademark and remove watermark (if plymouth is installed)
-COPY global_assets/trademark.png /tmp/trademark.png
-RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
-    rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
-    for i in $(seq -w 1 30); do \
-    cp /tmp/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
-    done; \
-    fi
 
 # ==============================================================================
 # Housekeeping
