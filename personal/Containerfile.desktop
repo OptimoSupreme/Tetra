@@ -32,6 +32,10 @@ RUN dconf update && \
     echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
+# Set Timezone and Enable Internet Time
+RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime && \
+    systemctl enable chronyd
+
 # Set Hostname
 RUN echo "balrog" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - balrog" > /usr/lib/tmpfiles.d/10-set-hostname.conf
