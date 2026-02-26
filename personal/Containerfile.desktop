@@ -48,6 +48,9 @@ RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
 # ==============================================================================
 # Package Modifications
 # ==============================================================================
+# Disable systemd-remount-fs.service to prevent failure on read-only bootc systems
+RUN systemctl mask systemd-remount-fs.service
+
 # Install RPM Fusion free & nonfree repos
 RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
