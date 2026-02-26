@@ -29,7 +29,7 @@ RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     mkdir -p /usr/share/glib-2.0/schemas && \
-    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
+    echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'\n\n[org.fedorahosted.background-logo-extension]\nlogo-file='/usr/share/pixmaps/trademark.png'\nlogo-file-dark='/usr/share/pixmaps/trademark.png'\nlogo-always-visible=true" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Set Timezone and Enable Internet Time
