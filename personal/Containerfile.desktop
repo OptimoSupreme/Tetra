@@ -60,9 +60,8 @@ RUN dnf install -y \
 RUN dnf copr enable -y scottames/ghostty && \
     dnf install -y ghostty
 
-# Configure Ghostty with darker theme and bypassing fastfetch on secondary shells
+# Configure Ghostty with darker theme
 COPY global_assets/ghostty/config /etc/ghostty/config
-COPY global_assets/ghostty/bashrc_bypass /etc/ghostty/bashrc_bypass
 
 # Switch to full ffmpeg and install additional multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \

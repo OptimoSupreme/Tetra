@@ -17,4 +17,3 @@ palette = 15=#FFFFFF
 background = #000000
 foreground = #FFFFFF
 cursor-color = #FFFFFF
-command = /usr/bin/bash --noprofile --rcfile /etc/ghostty/bashrc_bypass
