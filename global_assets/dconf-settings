@@ -1,6 +1,7 @@
 [org/gnome/desktop/interface]
 cursor-theme='Breeze_Light'
 font-antialiasing='rgba'
+clock-format='12h'
 
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,close'
