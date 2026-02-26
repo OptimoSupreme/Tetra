@@ -5,10 +5,12 @@ FROM quay.io/fedora/fedora-bootc:latest
 # ==============================================================================
 # Base workstation image
 # Install fastfetch, config, GNOME Desktop, and cursor theme
-RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick \
+RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick corectrl \
     @workstation-product-environment && \
     dnf remove -y gnome-contacts gnome-weather gnome-clocks mediawriter gnome-maps 'libreoffice*' gnome-boxes gnome-connections snapshot gnome-characters gnome-font-viewer gnome-logs gnome-tour yelp ptyxis && \
     git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
+    mkdir -p /etc/skel/.config/autostart && \
+    cp /usr/share/applications/org.corectrl.CoreCtrl.desktop /etc/skel/.config/autostart/org.corectrl.CoreCtrl.desktop && \
     systemctl enable gdm.service
 
 # ==============================================================================
@@ -21,6 +23,8 @@ RUN rm -rf /usr/share/backgrounds/*
 COPY global_assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY global_assets/dconf-profile /etc/dconf/profile/user
 COPY global_assets/dconf-settings /etc/dconf/db/local.d/00-custom
+COPY global_assets/90-corectrl.rules /etc/polkit-1/rules.d/90-corectrl.rules
+COPY global_assets/amdgpu.toml /usr/lib/bootc/kargs.d/01-amdgpu.toml
 RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
