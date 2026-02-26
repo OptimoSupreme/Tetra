@@ -14,7 +14,7 @@ RUN dnf install -y fastfetch git breeze-cursor-theme ImageMagick \
 # ==============================================================================
 # System Configuration
 # ==============================================================================
-# Rename OS in GRUB and Fastfetch
+# Name OS in GRUB and Fastfetch
 RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 # Apply global GNOME dconf settings and wallpaper
 RUN rm -rf /usr/share/backgrounds/*
@@ -29,7 +29,8 @@ RUN dconf update && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Set Hostname
-RUN echo "balrog" > /etc/hostname
+RUN echo "balrog" > /etc/hostname && \
+    echo "f+ /etc/hostname 0644 root root - balrog" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
 # Replace Plymouth spinner with custom trademark and remove watermark (if plymouth is installed)
 COPY global_assets/trademark.png /tmp/trademark.png
