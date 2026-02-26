@@ -81,6 +81,27 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
 # Install AMD hardware acceleration codecs
 RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
 
+# Install Flatpaks
+RUN flatpak install -y \
+    app.drey.Warp \
+    com.dec05eba.gpu_screen_recorder \
+    com.discordapp.Discord \
+    com.github.iwalton3.jellyfin-media-player \
+    com.github.k4zmu2a.spacecadetpinball \
+    com.google.Chrome \
+    com.slack.Slack \
+    com.spotify.Client \
+    com.valvesoftware.Steam \
+    com.valvesoftware.Steam.CompatibilityTool.Proton-GE \
+    com.vixalien.sticky \
+    de.haeckerfelix.Shortwave \
+    org.freecad.FreeCAD \
+    org.gimp.GIMP \
+    org.gnome.Fractal \
+    org.localsend.localsend_app \
+    org.onlyoffice.desktopeditors \
+    us.zoom.Zoom
+
 # ==============================================================================
 # User Environment
 # ==============================================================================
