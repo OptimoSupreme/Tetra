@@ -1,6 +1,6 @@
-# Custom Fedora bootc Images
+# Tetra
 
-This repository contains the configuration and Containerfiles for building custom, bootable, atomic Fedora Linux images using `bootc` (ostree + containers).
+This repository contains the configuration and Containerfiles for building Tetra, an atomic Fedora based Linux distribution using `bootc` (ostree + containers).
 
 ## Building Installation Media
 
