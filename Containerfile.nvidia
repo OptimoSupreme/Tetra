@@ -53,7 +53,15 @@ RUN dnf install -y \
 
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
-    dnf install -y akmod-nvidia intel-media-driver # include for instances where Intel iGPU is present
+    dnf install -y intel-media-driver # include for instances where Intel iGPU is present
+
+# Nvidia
+RUN dnf install -y kernel-devel akmods mokutil openssl
+COPY assets/nvidia_assets/certs/kmodcert.priv /etc/pki/akmods/certs/private_key.priv
+COPY assets/nvidia_assets/certs/kmodcert.der /etc/pki/akmods/certs/public_key.der
+RUN dnf install -y akmod-nvidia && \
+    akmods --force --kernels $(rpm -qa kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}') && \
+    rm -f /etc/pki/akmods/certs/private_key.priv
 
 # Terminal
 RUN dnf remove ptyxis -y && \
