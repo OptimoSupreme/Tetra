@@ -9,12 +9,13 @@ echo "======================================"
 echo ""
 
 echo "[INFO] Installing Flatpaks..."
-# flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-# flatpak install -y flathub ...
-com.github.k4zmu2a.spacecadetpinball \
-com.spotify.Client \
-org.mozilla.firefox \
-org.onlyoffice.desktopeditors
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install -y \
+  com.github.k4zmu2a.spacecadetpinball \
+  com.spotify.Client \
+  org.mozilla.firefox \
+  org.onlyoffice.desktopeditors
+
 echo "[INFO] Configuring GNOME Extensions..."
 # dconf load /org/gnome/shell/extensions/ < /usr/share/tetra/extensions.ini
 

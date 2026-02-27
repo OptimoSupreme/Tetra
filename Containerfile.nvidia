@@ -56,9 +56,14 @@ RUN dnf install -y akmod-nvidia && \
 RUN dnf remove ptyxis -y && \
     dnf copr enable -y scottames/ghostty && \
     dnf install -y fastfetch ghostty ImageMagick
-COPY assets/ghostty/config /etc/xdg/ghostty/config
+COPY assets/ghostty/config /etc/skel/.config/ghostty/config
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
+
+# Fonts
+RUN curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuSans.zip && \
+    unzip UbuntuSans.zip -d /usr/share/fonts/ubuntu-sans && \
+    rm UbuntuSans.zip
 
 # Housekeeping
 RUN dnf autoremove -y && \
@@ -66,15 +71,7 @@ RUN dnf autoremove -y && \
 
 # Configure Plymouth
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
-RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_darkbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo_darkbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-gdm-logo.png && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/system-logo-white.png && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-logo-icon.png && \
-    find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \; && \
-    if [ -d /usr/share/plymouth/themes/spinner ]; then \
+RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
     rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
     cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
@@ -88,7 +85,13 @@ COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
 RUN dconf update && \
     mkdir -p /usr/share/icons/default && \
-    echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme
+    echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora_logo_med.png && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora_whitelogo_med.png && \
+    find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \;
+
+# Polkit rules
+COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
 
 # Profile Script
 COPY assets/firstboot-setup.sh /usr/local/bin/firstboot-setup.sh
