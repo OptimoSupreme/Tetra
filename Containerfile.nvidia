@@ -1,7 +1,9 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
-# Name OS in GRUB and Fastfetch
-RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
+# Name OS in GRUB and Fastfetch and set default hostname
+RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/; s/^LOGO=.*/LOGO="trademark"/' /usr/lib/os-release
+RUN echo "tetra" > /etc/hostname && \
+    echo "f+ /etc/hostname 0644 root root - tetra" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
 # Disable systemd-remount-fs.service
 RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service
@@ -52,7 +54,7 @@ RUN dnf install -y akmod-nvidia && \
 RUN dnf remove ptyxis -y && \
     dnf copr enable -y scottames/ghostty && \
     dnf install -y fastfetch ghostty ImageMagick
-COPY assets/ghostty/config /etc/ghostty/config
+COPY assets/ghostty/config /etc/xdg/ghostty/config
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
 
@@ -68,6 +70,7 @@ RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightback
     cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo_darkbackground.svg && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-gdm-logo.png && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/system-logo-white.png && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-logo-icon.png && \
     if [ -d /usr/share/plymouth/themes/spinner ]; then \
     rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
