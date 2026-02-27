@@ -1,7 +1,7 @@
 bell-features = no-audio, title
 clipboard-read = allow
 window-theme = ghostty
-background-opacity = 0.8
+background-opacity = 0.9
 theme = Adventure
 background = #040404
 foreground = #feffff
