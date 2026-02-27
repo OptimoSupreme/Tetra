@@ -9,21 +9,6 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
-# Configure Plymouth
-COPY assets/trademark.png /usr/share/pixmaps/trademark.png
-RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_darkbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo_darkbackground.svg && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-gdm-logo.png && \
-    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/system-logo-white.png && \
-    if [ -d /usr/share/plymouth/themes/spinner ]; then \
-    rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
-    for i in $(seq -w 1 30); do \
-    cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
-    done; \
-    fi
-
 # Install repos and non-configured packages, remove unneeded packages
 RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
@@ -67,6 +52,21 @@ RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.confi
 # Housekeeping
 RUN dnf autoremove -y && \
     dnf clean all
+
+# Configure Plymouth
+COPY assets/trademark.png /usr/share/pixmaps/trademark.png
+RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightbackground.svg && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_darkbackground.svg && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo.svg && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo_darkbackground.svg && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-gdm-logo.png && \
+    cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/system-logo-white.png && \
+    if [ -d /usr/share/plymouth/themes/spinner ]; then \
+    rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
+    for i in $(seq -w 1 30); do \
+    cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
+    done; \
+    fi
 
 # Configure Gnome
 RUN rm -rf /usr/share/backgrounds/*
