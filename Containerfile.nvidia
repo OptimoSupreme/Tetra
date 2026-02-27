@@ -1,7 +1,7 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
 # Name OS in GRUB and Fastfetch and set default hostname
-RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/; s/^LOGO=.*/LOGO="trademark"/' /usr/lib/os-release
+RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 RUN echo "tetra" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - tetra" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
@@ -71,6 +71,7 @@ RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightback
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-gdm-logo.png && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/system-logo-white.png && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora-logo-icon.png && \
+    find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \; && \
     if [ -d /usr/share/plymouth/themes/spinner ]; then \
     rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
