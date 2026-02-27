@@ -1,7 +1,16 @@
 [org/gnome/desktop/interface]
 cursor-theme='Breeze_Light'
+color-scheme='prefer-dark'
+accent-color='orange'
+
+[org/gnome/login-screen]
+logo='/usr/share/pixmaps/trademark.png'
+cursor-theme='Breeze_Light'
 font-antialiasing='rgba'
 clock-format='12h'
+show-battery-percentage=true
+color-scheme='prefer-dark'
+accent-color='orange'
 
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,close'
@@ -12,3 +21,27 @@ picture-uri-dark='file:///usr/share/backgrounds/default.png'
 
 [org/gnome/desktop/screensaver]
 picture-uri='file:///usr/share/backgrounds/default.png'
+
+[org/gnome/settings-daemon/plugins/color]
+night-light-enabled=true
+night-light-schedule-automatic=true
+night-light-temperature=uint32 4000
+
+[org/gnome/shell/app-switcher]
+current-workspace-only=true
+
+[org/gnome/desktop/search-providers]
+sort-order=['org.gnome.Settings.desktop', 'org.gnome.Software.desktop']
+disabled=['org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Console.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Ptyxis.desktop']
+
+[org/gnome/desktop/peripherals/mouse]
+accel-profile='flat'
+
+[org/gnome/system/location]
+enabled=true
+
+[org/gnome/desktop/privacy]
+remember-recent-files=false
+remove-old-trash-files=true
+remove-old-temp-files=true
+old-files-age=uint32 3
