@@ -78,7 +78,7 @@ COPY assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
 COPY assets/gdm-profile /etc/dconf/profile/gdm
-COPY assets/gdm-settings /etc/dconf/db/gdm.d/01-custom-gdm
+COPY assets/gnome-initial-setup-profile /etc/dconf/profile/gnome-initial-setup
 COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gnome-initial-setup
 COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gdm
 RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
