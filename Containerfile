@@ -47,7 +47,7 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
 RUN dnf remove ptyxis -y && \
     dnf copr enable -y scottames/ghostty && \
     dnf install -y fastfetch ghostty ImageMagick
-COPY assets/ghostty/config /etc/xdg/ghostty/config
+COPY assets/ghostty/config /etc/skel/.config/ghostty/config
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
 
