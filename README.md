@@ -21,12 +21,12 @@ alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --
 Because the builder must run as root, your local container image must exist in **root's** podman storage. If you've been building your images as a regular user, use `sudo podman build` instead:
 
 ```bash
-sudo podman build -t localhost/workstation:latest -f personal/Containerfile.desktop .
+sudo podman build -t localhost/tetra:latest -f Containerfile .
 ```
 
 Then, use the alias to build your preferred output format. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
 ```bash
-bootc-image-builder build --type qcow2 --rootfs btrfs --local localhost/workstation:latest
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:latest
 ```
 
 The output will be placed in an `output/` directory in your current path.
