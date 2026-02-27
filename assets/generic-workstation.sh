@@ -13,7 +13,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak install -y \
   com.github.k4zmu2a.spacecadetpinball \
   com.spotify.Client \
-  org.mozilla.firefox \
   org.onlyoffice.desktopeditors
 
 echo "[INFO] Configuring GNOME Extensions..."
