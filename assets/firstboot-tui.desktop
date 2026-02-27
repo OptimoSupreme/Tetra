@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Tetra First Boot Setup
+Exec=ghostty -e /usr/local/bin/firstboot-setup.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true

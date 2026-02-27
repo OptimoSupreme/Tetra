@@ -21,6 +21,7 @@ RUN dnf install -y \
     git \
     breeze-cursor-theme \
     btrfs-assistant \
+    dialog \
     unzip
 
 RUN dnf remove -y \
@@ -88,3 +89,7 @@ RUN dconf update && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme
 
 # Profile Script
+COPY assets/firstboot-setup.sh /usr/local/bin/firstboot-setup.sh
+COPY assets/generic-workstation.sh /usr/local/bin/generic-workstation.sh
+COPY assets/firstboot-tui.desktop /etc/xdg/autostart/firstboot-tui.desktop
+RUN chmod +x /usr/local/bin/firstboot-setup.sh /usr/local/bin/generic-workstation.sh
