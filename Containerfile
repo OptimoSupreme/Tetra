@@ -10,7 +10,7 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
 # Configure Plymouth
-COPY global_assets/trademark.png /usr/share/pixmaps/trademark.png
+COPY assets/trademark.png /usr/share/pixmaps/trademark.png
 RUN cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_lightbackground.svg && \
     cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_darkbackground.svg && \
     cp /usr/share/pixmaps/trademark.png /usr/share/fedora-logos/fedora_logo.svg && \
@@ -79,3 +79,5 @@ RUN dconf update && \
     mkdir -p /usr/share/glib-2.0/schemas && \
     echo -e "[org.gnome.desktop.interface]\ncursor-theme='Breeze_Light'\ncolor-scheme='prefer-dark'\n\n[org.gnome.login-screen]\nlogo='/usr/share/pixmaps/trademark.png'" > /usr/share/glib-2.0/schemas/99-custom.gschema.override && \
     glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+# Profile Script
