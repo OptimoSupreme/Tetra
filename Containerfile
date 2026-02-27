@@ -14,6 +14,12 @@ RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
+RUN dnf install -y \
+    @workstation-product-environment \
+    git \
+    breeze-cursor-theme \
+    btrfs-assistant
+
 RUN dnf remove -y \
     gnome-contacts \
     gnome-weather \
@@ -29,12 +35,6 @@ RUN dnf remove -y \
     gnome-logs \
     gnome-tour \
     yelp
-
-RUN dnf install -y \
-    @workstation-product-environment \
-    git \
-    breeze-cursor-theme \
-    btrfs-assistant
 
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
