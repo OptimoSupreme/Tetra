@@ -77,7 +77,12 @@ RUN rm -rf /usr/share/backgrounds/*
 COPY assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
-RUN dconf update && \
+COPY assets/gdm-profile /etc/dconf/profile/gdm
+COPY assets/gdm-settings /etc/dconf/db/gdm.d/01-custom-gdm
+COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gnome-initial-setup
+COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gdm
+RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
+    dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora_logo_med.png && \

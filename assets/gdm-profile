@@ -1,0 +1,4 @@
+user-db:user
+system-db:gdm
+system-db:local
+file-db:/usr/share/gdm/greeter-dconf-defaults
