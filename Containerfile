@@ -20,7 +20,8 @@ RUN dnf install -y \
     @workstation-product-environment \
     git \
     breeze-cursor-theme \
-    btrfs-assistant
+    btrfs-assistant \
+    unzip
 
 RUN dnf remove -y \
     gnome-contacts \
@@ -50,6 +51,11 @@ RUN dnf remove ptyxis -y && \
 COPY assets/ghostty/config /etc/skel/.config/ghostty/config
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
+
+# Fonts
+RUN curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuSans.zip && \
+    unzip UbuntuSans.zip -d /usr/share/fonts/ubuntu-sans && \
+    rm UbuntuSans.zip
 
 # Housekeeping
 RUN dnf autoremove -y && \

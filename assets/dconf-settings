@@ -2,6 +2,9 @@
 cursor-theme='Breeze_Light'
 color-scheme='prefer-dark'
 accent-color='orange'
+font-name='UbuntuSansNerdFont-Regular 11'
+document-font-name='UbuntuSansNerdFont-Regular 11'
+monospace-font-name='UbuntuSansMonoNerdFont-Regular 10'
 
 [org/gnome/login-screen]
 logo='/usr/share/pixmaps/trademark.png'
