@@ -38,7 +38,8 @@ RUN dnf remove -y \
     gnome-font-viewer \
     gnome-logs \
     gnome-tour \
-    yelp
+    yelp \
+    malcontent-control
 
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
