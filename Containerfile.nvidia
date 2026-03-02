@@ -98,9 +98,3 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
 
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
-
-# Profile Script
-COPY assets/firstboot-setup.sh /usr/local/bin/firstboot-setup.sh
-COPY assets/generic-workstation.sh /usr/local/bin/generic-workstation.sh
-COPY assets/firstboot-tui.desktop /etc/xdg/autostart/firstboot-tui.desktop
-RUN chmod +x /usr/local/bin/firstboot-setup.sh /usr/local/bin/generic-workstation.sh
