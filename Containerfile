@@ -1,5 +1,8 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
+# Build variant: "generic" (default), "generic-nvidia", "my-laptop", "my-desktop"
+ARG TAG=generic
+
 # Name OS in GRUB and Fastfetch and set default hostname
 RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 RUN echo "tetra" > /etc/hostname && \
@@ -41,10 +44,39 @@ RUN dnf remove -y \
     yelp \
     malcontent-control
 
+# Multimedia codecs (common to all tags)
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
-    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+
+# GPU drivers (tag-specific)
+#   generic:        mesa freeworld (AMD+Intel) + intel-media-driver
+#   generic-nvidia: intel-media-driver only (NVIDIA handled below)
+#   my-laptop:      intel-media-driver only
+#   my-desktop:     mesa freeworld (AMD) only
+RUN if [ "$TAG" = "generic" ]; then \
     dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld && \
-    dnf install -y intel-media-driver
+    dnf install -y intel-media-driver; \
+    elif [ "$TAG" = "generic-nvidia" ] || [ "$TAG" = "my-laptop" ]; then \
+    dnf install -y intel-media-driver; \
+    elif [ "$TAG" = "my-desktop" ]; then \
+    dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld; \
+    fi
+
+# Nvidia (only when TAG=generic-nvidia)
+RUN if [ "$TAG" = "generic-nvidia" ]; then \
+    dnf install -y kernel-devel akmods mokutil openssl; \
+    fi
+COPY assets/nvidia_assets/certs/kmodcert.priv /tmp/kmodcert.priv
+COPY assets/nvidia_assets/certs/kmodcert.der /tmp/kmodcert.der
+RUN if [ "$TAG" = "generic-nvidia" ]; then \
+    mkdir -p /etc/pki/akmods/certs && \
+    cp /tmp/kmodcert.priv /etc/pki/akmods/certs/private_key.priv && \
+    cp /tmp/kmodcert.der /etc/pki/akmods/certs/public_key.der && \
+    dnf install -y akmod-nvidia && \
+    akmods --force --kernels $(rpm -qa kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}') && \
+    rm -f /etc/pki/akmods/certs/private_key.priv; \
+    fi && \
+    rm -f /tmp/kmodcert.priv /tmp/kmodcert.der
 
 # Terminal
 RUN dnf remove ptyxis -y && \

@@ -2,6 +2,39 @@
 
 This repository contains the configuration and Containerfiles for building Tetra, an atomic Fedora based Linux distribution using `bootc` (ostree + containers).
 
+## Building the Container Image
+
+The Containerfile uses a build argument (`TAG`) to produce different variants from a single file. The default is `generic`.
+
+### Available Tags
+
+| Tag | GPU Drivers | Use Case |
+|---|---|---|
+| `generic` | Mesa freeworld + Intel media driver | Any AMD or Intel system |
+| `generic-nvidia` | Intel media driver + NVIDIA akmod | NVIDIA systems (requires certs in `assets/nvidia_assets/certs/`) |
+| `my-laptop` | Intel media driver only | Justin's laptop (Intel iGPU) |
+| `my-desktop` | Mesa freeworld only | Justin's desktop (AMD RX 6600 XT) |
+
+### Build Commands
+
+```bash
+# Build the :generic variant (default)
+sudo podman build -t localhost/tetra:generic .
+
+# Build the :generic-nvidia variant
+sudo podman build --build-arg TAG=generic-nvidia -t localhost/tetra:generic-nvidia .
+
+# Build the :my-laptop variant
+sudo podman build --build-arg TAG=my-laptop -t localhost/tetra:my-laptop .
+
+# Build the :my-desktop variant
+sudo podman build --build-arg TAG=my-desktop -t localhost/tetra:my-desktop .
+```
+
+> **Note:** Use `sudo podman build` so the image lands in root's storage, which is required by `bootc-image-builder` (see below).
+
+---
+
 ## Building Installation Media
 
 To build ISOs or other installation media from these images, we use the `bootc-image-builder` container in podman.
@@ -16,17 +49,16 @@ Add this alias to your `~/.bashrc`:
 alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v "$(pwd)":/output -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest'
 ```
 
-### 2. Building an Image
+### 2. Building an ISO
 
-Because the builder must run as root, your local container image must exist in **root's** podman storage. If you've been building your images as a regular user, use `sudo podman build` instead:
+Use the alias to build your preferred output format, referencing whichever tag you built above. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
 
 ```bash
-sudo podman build -t localhost/tetra:latest -f Containerfile .
-```
+# Example using the :generic image
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:generic
 
-Then, use the alias to build your preferred output format. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
-```bash
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:latest
+# Example using the :generic-nvidia image
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:generic-nvidia
 ```
 
 The output will be placed in an `output/` directory in your current path.
