@@ -12,6 +12,7 @@ The Containerfile uses a build argument (`TAG`) to produce different variants fr
 |---|---|---|
 | `workstation` | Mesa freeworld + Intel media driver | Any AMD or Intel system |
 | `workstation-nvidia` | Intel media driver + NVIDIA akmod | NVIDIA systems (requires certs in `assets/nvidia_assets/certs/`) |
+| `server` | None | Headless server with Docker installed |
 | `my-laptop` | Intel media driver only | Justin's laptop (Intel iGPU) |
 | `my-desktop` | Mesa freeworld only | Justin's desktop (AMD RX 6600 XT) |
 
@@ -24,6 +25,8 @@ sudo podman build -t localhost/tetra:workstation .
 # Build the :workstation-nvidia variant
 sudo podman build --build-arg TAG=workstation-nvidia -t localhost/tetra:workstation-nvidia .
 
+# Build the :server variant
+sudo podman build --build-arg TAG=server -t localhost/tetra:server .
 # Build the :my-laptop variant
 sudo podman build --build-arg TAG=my-laptop -t localhost/tetra:my-laptop .
 
@@ -59,6 +62,9 @@ bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:work
 
 # Example using the :workstation-nvidia image
 bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation-nvidia
+
+# Example using the :server image
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:server
 ```
 
 The output will be placed in an `output/` directory in your current path.

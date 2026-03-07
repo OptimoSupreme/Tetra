@@ -1,6 +1,6 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
-# Build variant: "workstation", "workstation-nvidia", "my-laptop", "my-desktop"
+# Build variant: "workstation" (default), "workstation-nvidia", "server", "my-laptop", "my-desktop"
 ARG TAG=workstation
 
 # Name OS in GRUB and Fastfetch and set default hostname
@@ -14,39 +14,49 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
-# Install repos and non-configured packages, remove unneeded packages
-RUN dnf install -y \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+# Core packages for all tags
+RUN dnf install -y git dialog unzip fastfetch
 
-RUN dnf install -y \
-    @workstation-product-environment \
-    git \
-    breeze-cursor-theme \
-    btrfs-assistant \
-    dialog \
-    unzip
+# Server setup (only when TAG=server)
+RUN if [ "$TAG" = "server" ]; then \
+    dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo && \
+    dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
+    systemctl enable docker && \
+    dnf remove -y plymouth; \
+    fi
 
-RUN dnf remove -y \
-    gnome-contacts \
-    gnome-weather \
-    gnome-clocks \
-    mediawriter \
-    gnome-maps \
-    libreoffice* \
-    gnome-boxes \
-    gnome-connections \
-    snapshot \
-    gnome-characters \
-    gnome-font-viewer \
-    gnome-logs \
-    gnome-tour \
-    yelp \
-    malcontent-control
+# Workstation packages (skip on server)
+RUN if [ "$TAG" != "server" ]; then \
+    dnf install -y \
+        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+    dnf install -y \
+        @workstation-product-environment \
+        breeze-cursor-theme \
+        btrfs-assistant && \
+    dnf remove -y \
+        gnome-contacts \
+        gnome-weather \
+        gnome-clocks \
+        mediawriter \
+        gnome-maps \
+        libreoffice* \
+        gnome-boxes \
+        gnome-connections \
+        snapshot \
+        gnome-characters \
+        gnome-font-viewer \
+        gnome-logs \
+        gnome-tour \
+        yelp \
+        malcontent-control; \
+    fi
 
-# Multimedia codecs (common to all tags)
-RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
-    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+# Multimedia codecs (common to all workstation tags)
+RUN if [ "$TAG" != "server" ]; then \
+    dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
+    dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin; \
+    fi
 
 # GPU drivers (tag-specific)
 #   workstation:        mesa freeworld (AMD+Intel) + intel-media-driver
@@ -79,17 +89,21 @@ RUN if [ "$TAG" = "workstation-nvidia" ]; then \
     rm -f /tmp/kmodcert.priv /tmp/kmodcert.der
 
 # Terminal
-RUN dnf remove ptyxis -y && \
+RUN if [ "$TAG" != "server" ]; then \
+    dnf remove ptyxis -y && \
     dnf copr enable -y scottames/ghostty && \
-    dnf install -y fastfetch ghostty ImageMagick
+    dnf install -y ghostty ImageMagick; \
+    fi
 COPY assets/ghostty/config /etc/skel/.config/ghostty/config
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
     echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
 
 # Fonts
-RUN curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuSans.zip && \
+RUN if [ "$TAG" != "server" ]; then \
+    curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuSans.zip && \
     unzip UbuntuSans.zip -d /usr/share/fonts/ubuntu-sans && \
-    rm UbuntuSans.zip
+    rm UbuntuSans.zip; \
+    fi
 
 # Housekeeping
 RUN dnf autoremove -y && \
@@ -97,7 +111,7 @@ RUN dnf autoremove -y && \
 
 # Configure Plymouth
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
-RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
+RUN if [ "$TAG" != "server" ] && [ -d /usr/share/plymouth/themes/spinner ]; then \
     rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
     for i in $(seq -w 1 30); do \
     cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
@@ -105,7 +119,9 @@ RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
     fi
 
 # Configure Gnome
-RUN rm -rf /usr/share/backgrounds/*
+RUN if [ "$TAG" != "server" ]; then \
+    rm -rf /usr/share/backgrounds/*; \
+    fi
 COPY assets/wallpaper.png /usr/share/backgrounds/default.png
 COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
@@ -113,13 +129,15 @@ COPY assets/gdm-profile /etc/dconf/profile/gdm
 COPY assets/gnome-initial-setup-profile /etc/dconf/profile/gnome-initial-setup
 COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gnome-initial-setup
 COPY assets/gnome-initial-setup-account /var/lib/AccountsService/users/gdm
-RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
+RUN if [ "$TAG" != "server" ]; then \
+    echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
     dconf update && \
     mkdir -p /usr/share/icons/default && \
     echo -e "[Icon Theme]\nInherits=Breeze_Light" > /usr/share/icons/default/index.theme && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora_logo_med.png && \
     cp /usr/share/pixmaps/trademark.png /usr/share/pixmaps/fedora_whitelogo_med.png && \
-    find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \;
+    find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \;; \
+    fi
 
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
