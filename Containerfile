@@ -15,7 +15,7 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
 # Core packages for all tags
-RUN dnf install -y git dialog unzip fastfetch
+RUN dnf install -y git dialog unzip fastfetch tpm2-tools cryptsetup
 
 # Server setup (only when TAG=server)
 RUN if [ "$TAG" = "server" ]; then \
@@ -141,3 +141,7 @@ RUN if [ "$TAG" != "server" ]; then \
 
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
+
+# TPM Decryption Helper Script
+COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
+RUN chmod +x /usr/local/bin/enable-tpm-decryption

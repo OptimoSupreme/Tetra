@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+
+# Ensure we're running as root
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run this script as root (sudo enable-tpm-decryption)"
+  exit 1
+fi
+
+echo "Locating LUKS encrypted root partition..."
+
+# Find the device backing the root filesystem
+ROOT_DEV=$(findmnt -n -o SOURCE /)
+
+# If it's a mapper device (like LVM or crypt), find the underlying LUKS block device
+if [[ "$ROOT_DEV" == /dev/mapper/* ]]; then
+    # cryptsetup status will output the underlying device for a LUKS volume map
+    MAPPER_NAME=$(basename "$ROOT_DEV")
+    LUKS_DEV=$(cryptsetup status "$MAPPER_NAME" 2>/dev/null | grep 'device:' | awk '{print $2}')
+else
+    # Sometimes it might just be the direct block device if no LVM
+    LUKS_DEV="$ROOT_DEV"
+fi
+
+# Check if it's actually a LUKS device
+if ! cryptsetup isLuks "$LUKS_DEV" >/dev/null 2>&1; then
+  echo "Error: The root partition ($LUKS_DEV) does not appear to be a LUKS encrypted volume."
+  echo "Are you sure you enabled encryption during installation?"
+  exit 1
+fi
+
+echo "Found LUKS volume at: $LUKS_DEV"
+echo "Enrolling TPM2 device..."
+
+# Enroll the device using systemd-cryptenroll
+# We bind to PCR 7 (Secure Boot state)
+if systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 "$LUKS_DEV"; then
+    echo ""
+    echo "================================================================="
+    echo "SUCCESS: TPM auto-unlock has been configured for $LUKS_DEV"
+    echo "Your system should now decrypt automatically on the next reboot."
+    echo "================================================================="
+else
+    echo "Error: Failed to enroll TPM. Please check the logs above."
+    exit 1
+fi
