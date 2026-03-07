@@ -44,8 +44,6 @@ To build ISOs or other installation media from these images, we use the `bootc-i
 
 ### 1. Setting up the Builder
 
-`bootc-image-builder` strictly requires "rootful" execution because it performs low-level filesystem operations (like writing to raw disks or loopback interfaces).
-
 Add this alias to your `~/.bashrc`:
 
 ```bash

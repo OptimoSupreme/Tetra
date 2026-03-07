@@ -76,17 +76,21 @@ RUN if [ "$TAG" = "workstation" ]; then \
 RUN if [ "$TAG" = "workstation-nvidia" ]; then \
     dnf install -y kernel-devel akmods mokutil openssl; \
     fi
-COPY assets/nvidia_assets/certs/kmodcert.priv /tmp/kmodcert.priv
-COPY assets/nvidia_assets/certs/kmodcert.der /tmp/kmodcert.der
+COPY assets/nvidia_assets/certs /tmp/certs
 RUN if [ "$TAG" = "workstation-nvidia" ]; then \
-    mkdir -p /etc/pki/akmods/certs && \
-    cp /tmp/kmodcert.priv /etc/pki/akmods/certs/private_key.priv && \
-    cp /tmp/kmodcert.der /etc/pki/akmods/certs/public_key.der && \
-    dnf install -y akmod-nvidia && \
-    akmods --force --kernels $(rpm -qa kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}') && \
-    rm -f /etc/pki/akmods/certs/private_key.priv; \
+    if [ -f "/tmp/certs/kmodcert.priv" ] && [ -f "/tmp/certs/kmodcert.der" ]; then \
+        mkdir -p /etc/pki/akmods/certs && \
+        cp /tmp/certs/kmodcert.priv /etc/pki/akmods/certs/private_key.priv && \
+        cp /tmp/certs/kmodcert.der /etc/pki/akmods/certs/public_key.der && \
+        dnf install -y akmod-nvidia && \
+        akmods --force --kernels $(rpm -qa kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}') && \
+        rm -f /etc/pki/akmods/certs/private_key.priv; \
+    else \
+        echo "Missing kmodcert.priv or kmodcert.der in assets/nvidia_assets/certs" >&2; \
+        exit 1; \
+    fi; \
     fi && \
-    rm -f /tmp/kmodcert.priv /tmp/kmodcert.der
+    rm -rf /tmp/certs
 
 # Terminal
 RUN if [ "$TAG" != "server" ]; then \
