@@ -1,2 +1,5 @@
 [customizations.kernel]
 append = "inst.webui"
+
+[customizations.installer.kickstart]
+contents = " "
