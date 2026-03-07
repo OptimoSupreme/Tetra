@@ -47,7 +47,7 @@ To build ISOs or other installation media from these images, we use the `bootc-i
 Add this alias to your `~/.bashrc`:
 
 ```bash
-alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v "$(pwd)":/output -v "$HOME/Downloads":/Downloads -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest'
+alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v "$(pwd)":/output -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest'
 ```
 
 ### 2. Building an ISO
@@ -56,13 +56,13 @@ Use the alias to build your preferred output format. To trigger the interactive 
 
 ```bash
 # Example using the :workstation image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --output /Downloads --local localhost/tetra:workstation
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation
 
 # Example using the :workstation-nvidia image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --output /Downloads --local localhost/tetra:workstation-nvidia
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation-nvidia
 
 # Example using the :server image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --output /Downloads --local localhost/tetra:server
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:server
 ```
 
 The output will be placed in your `~/Downloads` directory.
