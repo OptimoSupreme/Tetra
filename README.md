@@ -56,13 +56,13 @@ Use the alias to build your preferred output format. To trigger the interactive 
 
 ```bash
 # Example using the :workstation image
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation
+bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:workstation
 
 # Example using the :workstation-nvidia image
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation-nvidia
+bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:workstation-nvidia
 
 # Example using the :server image
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:server
+bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:server
 ```
 
 The output will be placed in your `~/Downloads` directory.
