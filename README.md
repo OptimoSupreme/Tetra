@@ -4,25 +4,25 @@ This repository contains the configuration and Containerfiles for building Tetra
 
 ## Building the Container Image
 
-The Containerfile uses a build argument (`TAG`) to produce different variants from a single file. The default is `generic`.
+The Containerfile uses a build argument (`TAG`) to produce different variants from a single file. The default is `workstation`.
 
 ### Available Tags
 
 | Tag | GPU Drivers | Use Case |
 |---|---|---|
-| `generic` | Mesa freeworld + Intel media driver | Any AMD or Intel system |
-| `generic-nvidia` | Intel media driver + NVIDIA akmod | NVIDIA systems (requires certs in `assets/nvidia_assets/certs/`) |
+| `workstation` | Mesa freeworld + Intel media driver | Any AMD or Intel system |
+| `workstation-nvidia` | Intel media driver + NVIDIA akmod | NVIDIA systems (requires certs in `assets/nvidia_assets/certs/`) |
 | `my-laptop` | Intel media driver only | Justin's laptop (Intel iGPU) |
 | `my-desktop` | Mesa freeworld only | Justin's desktop (AMD RX 6600 XT) |
 
 ### Build Commands
 
 ```bash
-# Build the :generic variant (default)
-sudo podman build -t localhost/tetra:generic .
+# Build the :workstation variant (default)
+sudo podman build -t localhost/tetra:workstation .
 
-# Build the :generic-nvidia variant
-sudo podman build --build-arg TAG=generic-nvidia -t localhost/tetra:generic-nvidia .
+# Build the :workstation-nvidia variant
+sudo podman build --build-arg TAG=workstation-nvidia -t localhost/tetra:workstation-nvidia .
 
 # Build the :my-laptop variant
 sudo podman build --build-arg TAG=my-laptop -t localhost/tetra:my-laptop .
@@ -54,11 +54,11 @@ alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --
 Use the alias to build your preferred output format, referencing whichever tag you built above. We frequently need to specify the root filesystem type (e.g., `--rootfs ext4`, `btrfs`, or `xfs`) depending on the base image:
 
 ```bash
-# Example using the :generic image
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:generic
+# Example using the :workstation image
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation
 
-# Example using the :generic-nvidia image
-bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:generic-nvidia
+# Example using the :workstation-nvidia image
+bootc-image-builder build --type iso --rootfs btrfs --local localhost/tetra:workstation-nvidia
 ```
 
 The output will be placed in an `output/` directory in your current path.

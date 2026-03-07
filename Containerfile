@@ -1,7 +1,7 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
-# Build variant: "generic" (default), "generic-nvidia", "my-laptop", "my-desktop"
-ARG TAG=generic
+# Build variant: "workstation", "workstation-nvidia", "my-laptop", "my-desktop"
+ARG TAG=workstation
 
 # Name OS in GRUB and Fastfetch and set default hostname
 RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
@@ -49,26 +49,26 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
 # GPU drivers (tag-specific)
-#   generic:        mesa freeworld (AMD+Intel) + intel-media-driver
-#   generic-nvidia: intel-media-driver only (NVIDIA handled below)
+#   workstation:        mesa freeworld (AMD+Intel) + intel-media-driver
+#   workstation-nvidia: intel-media-driver only (NVIDIA handled below)
 #   my-laptop:      intel-media-driver only
 #   my-desktop:     mesa freeworld (AMD) only
-RUN if [ "$TAG" = "generic" ]; then \
+RUN if [ "$TAG" = "workstation" ]; then \
     dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld && \
     dnf install -y intel-media-driver; \
-    elif [ "$TAG" = "generic-nvidia" ] || [ "$TAG" = "my-laptop" ]; then \
+    elif [ "$TAG" = "workstation-nvidia" ] || [ "$TAG" = "my-laptop" ]; then \
     dnf install -y intel-media-driver; \
     elif [ "$TAG" = "my-desktop" ]; then \
     dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld; \
     fi
 
-# Nvidia (only when TAG=generic-nvidia)
-RUN if [ "$TAG" = "generic-nvidia" ]; then \
+# Nvidia (only when TAG=workstation-nvidia)
+RUN if [ "$TAG" = "workstation-nvidia" ]; then \
     dnf install -y kernel-devel akmods mokutil openssl; \
     fi
 COPY assets/nvidia_assets/certs/kmodcert.priv /tmp/kmodcert.priv
 COPY assets/nvidia_assets/certs/kmodcert.der /tmp/kmodcert.der
-RUN if [ "$TAG" = "generic-nvidia" ]; then \
+RUN if [ "$TAG" = "workstation-nvidia" ]; then \
     mkdir -p /etc/pki/akmods/certs && \
     cp /tmp/kmodcert.priv /etc/pki/akmods/certs/private_key.priv && \
     cp /tmp/kmodcert.der /etc/pki/akmods/certs/public_key.der && \
