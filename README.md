@@ -40,43 +40,8 @@ sudo podman build --build-arg TAG=my-desktop -t localhost/tetra:my-desktop .
 
 ## Building Installation Media
 
-To build ISOs or other installation media from these images, we use the `bootc-image-builder` container in podman.
+Due to current upstream limitations with `bootc-image-builder` missing the modern Anaconda WebUI and Live environment support, we are temporarily using `titanoboa` to generate our installation media.
 
-### 1. Setting up the Builder
+Please see the [BUILDING_ISO_TEMP.md](BUILDING_ISO_TEMP.md) guide for instructions on generating an installable Live ISO from your locally built container image. 
 
-Add this alias to your `~/.bashrc`:
-
-```bash
-alias bootc-image-builder='sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v "$(pwd)":/output -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest'
-```
-
-### 2. Building an ISO
-
-Use the alias to build your preferred output format. To trigger the interactive Anaconda Web UI, we pass our custom `config.toml` file.
-
-```bash
-# Example using the :workstation image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:workstation
-
-# Example using the :workstation-nvidia image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:workstation-nvidia
-
-# Example using the :server image
-bootc-image-builder build --type iso --rootfs btrfs --config assets/config.toml --local localhost/tetra:server
-```
-
-The output will be placed in your `~/Downloads` directory.
-
-**Available Image Types:**
-You can change the `--type` flag to generate various formats:
-- `qcow2` - QEMU Copy On Write (Ideal for KVM/libvirt/virt-manager testing)
-- `iso` or `anaconda-iso` - Bootable installer ISO (Standard installation media)
-- `raw` - Raw disk image
-- `ami` - Amazon Machine Image (AWS)
-- `vmdk` - VMware virtual disk
-- `gce` - Google Compute Engine image
-
-## Future Plans
-- Set up automated builds.
-- Define base packages, users, and systemd services.
-- Decide on a project name.
+> **Note:** We plan to revert to the upstream `bootc-image-builder` tooling once these features are officially supported (expected in less than 6 months).
