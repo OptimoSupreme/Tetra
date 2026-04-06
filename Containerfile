@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-bootc:latest
+FROM quay.io/fedora/fedora-bootc:44
 
 # Build variant: "workstation" (default), "workstation-nvidia", "server", "my-laptop", "my-desktop"
 ARG TAG=workstation

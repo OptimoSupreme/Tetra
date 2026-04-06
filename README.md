@@ -34,14 +34,48 @@ sudo podman build --build-arg TAG=my-laptop -t localhost/tetra:my-laptop .
 sudo podman build --build-arg TAG=my-desktop -t localhost/tetra:my-desktop .
 ```
 
-> **Note:** Use `sudo podman build` so the image lands in root's storage, which is required by `bootc-image-builder` (see below).
+> **Note:** Use `sudo podman build` so the image lands in root's storage, which is required by `image-builder` (see below).
 
 ---
 
 ## Building Installation Media
 
-Due to current upstream limitations with `bootc-image-builder` missing the modern Anaconda WebUI and Live environment support, we are temporarily using `titanoboa` to generate our installation media.
+We use `image-builder` ([osbuild/image-builder-cli](https://github.com/osbuild/image-builder-cli)) to generate installable ISOs with the Anaconda WebUI. The process uses two containers: an **installer container** (includes Anaconda with the WebUI) and your **OS container** (Tetra itself) as the payload.
 
-Please see the [BUILDING_ISO_TEMP.md](BUILDING_ISO_TEMP.md) guide for instructions on generating an installable Live ISO from your locally built container image. 
+> **Note:** Currently targeting Fedora 44 (beta). The base image tags will be updated to `:latest` once Fedora 44 goes stable.
 
-> **Note:** We plan to revert to the upstream `bootc-image-builder` tooling once these features are officially supported (expected in less than 6 months).
+### 1. Build the installer container
+
+```bash
+sudo podman build -t localhost/tetra-installer:latest -f Containerfile.installer .
+```
+
+### 2. Set up the `image-builder` alias
+
+```bash
+alias image-builder='sudo podman run \
+  --rm -it --privileged --pull=newer \
+  --security-opt label=type:unconfined_t \
+  -v $(pwd)/output:/output \
+  -v /var/lib/containers/storage:/var/lib/containers/storage \
+  ghcr.io/osbuild/image-builder-cli:latest build'
+```
+
+### 3. Build the ISO
+
+```bash
+mkdir -p output
+
+image-builder \
+  --bootc-ref localhost/tetra-installer:latest \
+  --bootc-installer-payload-ref localhost/tetra:workstation \
+  bootc-installer
+```
+
+### 4. Locate your ISO
+
+The generated ISO will be in the `output/` directory:
+
+```bash
+ls -lh output/bootiso/*.iso
+```
