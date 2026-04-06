@@ -6,6 +6,7 @@ RUN dnf install -y \
     anaconda \
     anaconda-webui \
     anaconda-install-env-deps \
+    anaconda-install-img-deps \
     anaconda-dracut \
     dracut-config-generic \
     dracut-network \
