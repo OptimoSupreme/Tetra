@@ -44,13 +44,21 @@ We use `image-builder` ([osbuild/image-builder-cli](https://github.com/osbuild/i
 
 > **Note:** Currently targeting Fedora 44 (beta). The base image tags will be updated to `:latest` once Fedora 44 goes stable.
 
-### 1. Build the installer container
+### 1. Build the OS container
+
+See the build commands above for all available variants.
+
+```bash
+sudo podman build -t localhost/tetra:workstation .
+```
+
+### 2. Build the installer container
 
 ```bash
 sudo podman build -t localhost/tetra-installer:latest -f Containerfile.installer .
 ```
 
-### 2. Set up the `image-builder` alias
+### 3. Set up the `image-builder` alias
 
 ```bash
 alias image-builder='sudo podman run \
@@ -61,7 +69,7 @@ alias image-builder='sudo podman run \
   ghcr.io/osbuild/image-builder-cli:latest build'
 ```
 
-### 3. Build the ISO
+### 4. Build the ISO
 
 ```bash
 mkdir -p output
@@ -69,13 +77,13 @@ mkdir -p output
 image-builder \
   --bootc-ref localhost/tetra-installer:latest \
   --bootc-installer-payload-ref localhost/tetra:workstation \
+  --bootc-default-fs btrfs \
   bootc-installer
 ```
 
-### 4. Locate your ISO
-
-The generated ISO will be in the `output/` directory:
+### 5. Rename and locate your ISO
 
 ```bash
-ls -lh output/bootiso/*.iso
+mv output/bootiso/*.iso "output/tetra-$(date +%Y%m%d)-x86_64.iso"
+ls -lh output/tetra-*.iso
 ```
