@@ -84,6 +84,6 @@ image-builder \
 ### 5. Rename and locate your ISO
 
 ```bash
-mv output/bootiso/*.iso "output/tetra-$(date +%Y%m%d)-x86_64.iso"
+mv output/*/*.iso "output/tetra-$(date +%Y%m%d)-x86_64.iso"
 ls -lh output/tetra-*.iso
 ```
