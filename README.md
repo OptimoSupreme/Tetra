@@ -40,7 +40,7 @@ sudo podman build --build-arg TAG=my-desktop -t localhost/tetra:my-desktop .
 
 ## Building Installation Media
 
-We use `image-builder` ([osbuild/image-builder-cli](https://github.com/osbuild/image-builder-cli)) to generate installable ISOs with the Anaconda WebUI. The process uses two containers: an **installer container** (includes Anaconda with the WebUI) and your **OS container** (Tetra itself) as the payload.
+We use `image-builder` ([osbuild/image-builder-cli](https://github.com/osbuild/image-builder-cli)) to generate installable ISOs. The process uses two containers: an **installer container** (includes Anaconda) and your **OS container** (Tetra itself) as the payload.
 
 > **Note:** Currently targeting Fedora 44 (beta). The base image tags will be updated to `:latest` once Fedora 44 goes stable.
 
