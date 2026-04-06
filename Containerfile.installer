@@ -4,6 +4,7 @@ RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /u
 
 RUN dnf install -y \
     anaconda \
+    anaconda-webui \
     anaconda-install-env-deps \
     anaconda-dracut \
     dracut-config-generic \

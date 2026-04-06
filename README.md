@@ -65,6 +65,7 @@ alias image-builder='sudo podman run \
   --rm -it --privileged --pull=newer \
   --security-opt label=type:unconfined_t \
   -v $(pwd)/output:/output \
+  -v $(pwd)/blueprint.toml:/blueprint.toml:ro \
   -v /var/lib/containers/storage:/var/lib/containers/storage \
   ghcr.io/osbuild/image-builder-cli:latest build'
 ```
@@ -78,6 +79,7 @@ image-builder \
   --bootc-ref localhost/tetra-installer:latest \
   --bootc-installer-payload-ref localhost/tetra:workstation \
   --bootc-default-fs btrfs \
+  --blueprint /blueprint.toml \
   bootc-installer
 ```
 
