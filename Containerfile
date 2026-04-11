@@ -11,15 +11,17 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
-# Core packages
-RUN dnf install -y git dialog unzip fastfetch tpm2-tools cryptsetup
-
-# Workstation packages
+# Core Packages
 RUN dnf install -y \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
         https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
     dnf install -y \
         @workstation-product-environment \
+        git \
+        unzip \
+        fastfetch \
+        tpm2-tools \
+        cryptsetup \
         breeze-cursor-theme \
         btrfs-assistant && \
     dnf remove -y \
