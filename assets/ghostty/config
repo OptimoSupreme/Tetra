@@ -1,7 +1,0 @@
-bell-features = no-audio, title
-clipboard-read = allow
-window-theme = ghostty
-background-opacity = 0.9
-theme = Adventure
-font-size = 11
-font-family = UbuntuSansMonoNerdFont-Regular
