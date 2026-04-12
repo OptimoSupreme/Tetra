@@ -51,12 +51,7 @@ RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld && \
 
 # Fastfetch
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
-    # echo 'if [[ $- == *i* ]] && [[ -z "$FASTFETCH_HAS_RUN" ]]; then FASTFETCH_HAS_RUN=1; fastfetch; fi' >> /etc/bashrc
-
-# Fonts
-RUN curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/UbuntuSans.zip && \
-    unzip UbuntuSans.zip -d /usr/share/fonts/ubuntu-sans && \
-    rm UbuntuSans.zip
+    echo 'fastfetch' >> /etc/bashrc
 
 # Housekeeping
 RUN dnf autoremove -y && \
