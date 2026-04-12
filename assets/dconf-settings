@@ -2,9 +2,6 @@
 cursor-theme='Breeze_Light'
 color-scheme='prefer-dark'
 accent-color='orange'
-font-name='UbuntuSansNerdFont-Regular 11'
-document-font-name='UbuntuSansNerdFont-Regular 11'
-monospace-font-name='UbuntuSansMonoNerdFont-Regular 10'
 
 [org/gnome/login-screen]
 logo='/usr/share/pixmaps/trademark.png'
@@ -48,3 +45,16 @@ remember-recent-files=false
 remove-old-trash-files=true
 remove-old-temp-files=true
 old-files-age=uint32 3
+
+[org/gnome/Ptyxis]
+use-system-font=false
+font-name='Monospace 11'
+cursor-shape='underline'
+cursor-blink-mode='off'
+audible-bell=false
+default-profile-uuid='00000000-0000-0000-0000-000000000000'
+profile-uuids=['00000000-0000-0000-0000-000000000000']
+
+[org/gnome/Ptyxis/Profiles/00000000-0000-0000-0000-000000000000]
+label='Default'
+palette='Dark Pastel'
