@@ -1,7 +1,6 @@
 FROM quay.io/fedora/fedora-bootc:43
 
-# Name OS in GRUB and Fastfetch and set default hostname
-RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
+# Set default hostname
 RUN echo "tetra" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - tetra" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
@@ -57,6 +56,9 @@ RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.confi
 # Housekeeping
 RUN dnf autoremove -y && \
     dnf clean all
+
+# Name OS in GRUB, Fastfetch, and GNOME Settings (must run after package installs)
+RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
 
 # Configure Plymouth
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
