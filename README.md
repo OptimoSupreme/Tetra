@@ -38,7 +38,7 @@ What each flag does:
 | `--use-librepo=True` | Uses the newer librepo backend (recommended by upstream) |
 | `localhost/tetra:workstation` | The bootc image to embed as the install payload |
 
-### 3. Locate and (optionally) rename the ISO
+### 3. Move & rename the ISO
 
 ```bash
 sudo chown -R "$USER":"$USER" output
