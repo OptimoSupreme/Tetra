@@ -5,8 +5,8 @@ RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /u
 RUN echo "tetra" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - tetra" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
-# Disable systemd-remount-fs.service
-RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service
+# Mask unnecessary/broken services in container
+RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service mcelog.service
 
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
@@ -23,7 +23,8 @@ RUN dnf install -y \
         tpm2-tools \
         cryptsetup \
         breeze-cursor-theme \
-        btrfs-assistant && \
+        btrfs-assistant \
+        langpacks-en && \
     dnf remove -y \
         gnome-contacts \
         gnome-weather \
