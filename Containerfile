@@ -106,6 +106,12 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
 
+# Btrfs Snapshots
+COPY assets/btrfs-assistant.conf /etc/btrfs-assistant.conf
+COPY assets/snapper-home-config /etc/snapper/configs/home
+COPY assets/snapper-sysconfig /etc/sysconfig/snapper
+RUN systemctl enable snapper-timeline.timer snapper-cleanup.timer
+
 # TPM Decryption Helper Script
 COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
 RUN chmod +x /usr/local/bin/enable-tpm-decryption
