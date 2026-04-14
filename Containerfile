@@ -57,8 +57,25 @@ RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.confi
 RUN dnf autoremove -y && \
     dnf clean all
 
-# Name OS in GRUB, Fastfetch, and GNOME Settings (must run after package installs)
-RUN sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/; s/^NAME=.*/NAME="Tetra"/' /usr/lib/os-release
+# Name OS
+RUN sed -i \
+    -e 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/' \
+    -e 's/^NAME=.*/NAME="Tetra"/' \
+    -e 's/^ID=.*/ID=tetra/' \
+    -e '/^ANSI_COLOR=/d' \
+    -e '/^LOGO=/d' \
+    -e '/^CPE_NAME=/d' \
+    -e 's/^DEFAULT_HOSTNAME=.*/DEFAULT_HOSTNAME=tetra/' \
+    -e 's|^HOME_URL=.*|HOME_URL=https://github.com/OptimoSupreme/Tetra|' \
+    -e '/^DOCUMENTATION_URL=/d' \
+    -e '/^SUPPORT_URL=/d' \
+    -e '/^BUG_REPORT_URL=/d' \
+    -e '/^REDHAT_BUGZILLA_PRODUCT_VERSION=/d' \
+    -e '/^REDHAT_BUGZILLA_PRODUCT=/d' \
+    -e '/^REDHAT_SUPPORT_PRODUCT_VERSION=/d' \
+    -e '/^REDHAT_SUPPORT_PRODUCT=/d' \
+    -e '/^SUPPORT_END=/d' \
+    /usr/lib/os-release
 
 # Configure Plymouth
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
