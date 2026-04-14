@@ -2,15 +2,13 @@
 
 This repository contains the configuration and Containerfiles for building Tetra, an atomic Fedora based Linux distribution using `bootc` (ostree + containers).
 
-### 1. Build the OS container
-
-If you haven't already:
+### 1. Building the OS container
 
 ```bash
 sudo podman build -t localhost/tetra:workstation .
 ```
 
-### 2. Build the installer ISO
+### 2. Building the installer ISO
 
 ```bash
 sudo podman run \
