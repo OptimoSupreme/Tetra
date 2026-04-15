@@ -61,7 +61,6 @@ RUN dnf autoremove -y && \
 RUN sed -i \
     -e 's/^PRETTY_NAME=.*/PRETTY_NAME="Tetra"/' \
     -e 's/^NAME=.*/NAME="Tetra"/' \
-    -e 's/^ID=.*/ID=tetra/' \
     -e '/^ANSI_COLOR=/d' \
     -e '/^LOGO=/d' \
     -e '/^CPE_NAME=/d' \
