@@ -8,22 +8,31 @@ fi
 
 echo "Locating LUKS encrypted root partition..."
 
-# Find the device backing the root filesystem
-ROOT_DEV=$(findmnt -n -o SOURCE /)
+# On ostree/composefs systems, the root (/) may not be on a block device directly.
+# Check /sysroot first (where the actual disk is mounted), then fall back to /.
+# Strip btrfs subvolume suffixes like [/root] from findmnt output.
+SYSROOT_DEV=$(findmnt -n -o SOURCE /sysroot 2>/dev/null | sed 's/\[.*\]$//')
+ROOT_DEV=$(findmnt -n -o SOURCE / | sed 's/\[.*\]$//')
 
-# If it's a mapper device (like LVM or crypt), find the underlying LUKS block device
-if [[ "$ROOT_DEV" == /dev/mapper/* ]]; then
-    # cryptsetup status will output the underlying device for a LUKS volume map
+if [[ "$SYSROOT_DEV" == /dev/mapper/* ]]; then
+    MAPPER_NAME=$(basename "$SYSROOT_DEV")
+    LUKS_DEV=$(cryptsetup status "$MAPPER_NAME" 2>/dev/null | grep 'device:' | awk '{print $2}')
+elif [[ "$ROOT_DEV" == /dev/mapper/* ]]; then
     MAPPER_NAME=$(basename "$ROOT_DEV")
     LUKS_DEV=$(cryptsetup status "$MAPPER_NAME" 2>/dev/null | grep 'device:' | awk '{print $2}')
 else
-    # Sometimes it might just be the direct block device if no LVM
-    LUKS_DEV="$ROOT_DEV"
+    # Fall back: find any active LUKS device on the system
+    MAPPER_NAME=$(lsblk -ln -o NAME,TYPE | awk '$2 == "crypt" {print $1; exit}')
+    if [[ -n "$MAPPER_NAME" ]]; then
+        LUKS_DEV=$(cryptsetup status "$MAPPER_NAME" 2>/dev/null | grep 'device:' | awk '{print $2}')
+    else
+        LUKS_DEV=""
+    fi
 fi
 
 # Check if it's actually a LUKS device
-if ! cryptsetup isLuks "$LUKS_DEV" >/dev/null 2>&1; then
-  echo "Error: The root partition ($LUKS_DEV) does not appear to be a LUKS encrypted volume."
+if [[ -z "$LUKS_DEV" ]] || ! cryptsetup isLuks "$LUKS_DEV" >/dev/null 2>&1; then
+  echo "Error: Could not find a LUKS encrypted volume."
   echo "Are you sure you enabled encryption during installation?"
   exit 1
 fi
