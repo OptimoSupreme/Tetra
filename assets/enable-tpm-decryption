@@ -41,7 +41,7 @@ echo "Found LUKS volume at: $LUKS_DEV"
 echo "Enrolling TPM2 device..."
 
 # Enroll the device using systemd-cryptenroll
-# We bind to PCR 7 (Secure Boot state)
+# Bind to PCR 7 (Secure Boot state)
 if systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 "$LUKS_DEV"; then
     echo ""
     echo "================================================================="
