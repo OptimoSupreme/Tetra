@@ -22,6 +22,7 @@ sudo podman run \
   --rootfs btrfs \
   --use-librepo=True \
   localhost/tetra:workstation
+sudo chown -R $USER:$USER ./output
 ```
 
 ## Building a qcow2 image for VM testing
