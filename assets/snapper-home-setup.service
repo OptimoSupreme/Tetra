@@ -1,0 +1,16 @@
+[Unit]
+Description=Create snapper .snapshots subvolume for /var/home
+ConditionPathIsMountPoint=/var/home
+ConditionPathExists=!/var/home/.snapshots
+After=var-home.mount local-fs.target
+Before=snapper-timeline.timer snapper-cleanup.timer
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/btrfs subvolume create /var/home/.snapshots
+ExecStart=/usr/bin/chown root:root /var/home/.snapshots
+ExecStart=/usr/bin/chmod 750 /var/home/.snapshots
+
+[Install]
+WantedBy=multi-user.target

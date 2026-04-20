@@ -107,9 +107,10 @@ COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-softwa
 
 # Btrfs Snapshots
 COPY assets/btrfs-assistant.conf /etc/btrfs-assistant.conf
-COPY assets/snapper-home-config /etc/snapper/configs/home
+COPY --chmod=0640 assets/snapper-home-config /etc/snapper/configs/home
 COPY assets/snapper-sysconfig /etc/sysconfig/snapper
-RUN systemctl enable snapper-timeline.timer snapper-cleanup.timer
+COPY assets/snapper-home-setup.service /usr/lib/systemd/system/snapper-home-setup.service
+RUN systemctl enable snapper-home-setup.service snapper-timeline.timer snapper-cleanup.timer
 
 # TPM Decryption Helper Script
 COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
