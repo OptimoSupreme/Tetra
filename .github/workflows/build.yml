@@ -108,9 +108,11 @@ jobs:
         env:
           GH_USER: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST: ${{ needs.build-container.outputs.digest }}
         run: |
           echo "$GH_TOKEN" | sudo podman login ghcr.io -u "$GH_USER" --password-stdin
-          sudo podman pull "${IMAGE_REF}@${{ needs.build-container.outputs.digest }}"
+          sudo podman pull "${IMAGE_REF}@${DIGEST}"
+          sudo podman tag "${IMAGE_REF}@${DIGEST}" "${IMAGE_REF}:workstation"
 
       - name: Build installer ISO
         run: |
