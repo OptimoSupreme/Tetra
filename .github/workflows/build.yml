@@ -24,10 +24,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    outputs:
-      digest: ${{ steps.push.outputs.digest }}
-      date: ${{ steps.meta.outputs.date }}
-      date-hyphen: ${{ steps.meta.outputs.date-hyphen }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,9 +43,6 @@ jobs:
         id: meta
         run: |
           DATE=$(date -u +%Y%m%d)
-          DATE_HYPHEN=$(date -u +%Y-%m-%d)
-          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
-          echo "date-hyphen=${DATE_HYPHEN}" >> "$GITHUB_OUTPUT"
           echo "tags=workstation workstation-${DATE} latest" >> "$GITHUB_OUTPUT"
 
       - name: Build container image
@@ -81,93 +74,3 @@ jobs:
       - name: Sign container image
         run: |
           cosign sign --yes "${IMAGE_REF}@${{ steps.push.outputs.digest }}"
-
-  build-iso:
-    needs: build-container
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      packages: read
-      id-token: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Maximize build space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: true
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: false
-          swap-storage: true
-          docker-images: true
-
-      - name: Pull container image by digest
-        env:
-          GH_USER: ${{ github.actor }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DIGEST: ${{ needs.build-container.outputs.digest }}
-        run: |
-          echo "$GH_TOKEN" | sudo podman login ghcr.io -u "$GH_USER" --password-stdin
-          sudo podman pull "${IMAGE_REF}@${DIGEST}"
-          sudo podman tag "${IMAGE_REF}@${DIGEST}" "${IMAGE_REF}:workstation"
-
-      - name: Build installer ISO
-        run: |
-          mkdir -p output
-          sudo podman run --rm --privileged \
-            --security-opt label=type:unconfined_t \
-            -v "${{ github.workspace }}/blueprint.toml:/config.toml:ro" \
-            -v "${{ github.workspace }}/output:/output" \
-            -v /var/lib/containers/storage:/var/lib/containers/storage \
-            quay.io/centos-bootc/bootc-image-builder:latest \
-            --type anaconda-iso \
-            --rootfs btrfs \
-            --use-librepo=True \
-            "${IMAGE_REF}:workstation"
-
-      - name: Post-process ISO
-        env:
-          DATE: ${{ needs.build-container.outputs.date }}
-        run: |
-          sudo chown -R "$USER:$USER" output
-          mv "output/bootiso/install.iso" "output/bootiso/tetra-${DATE}.iso"
-          (cd output/bootiso && sha256sum "tetra-${DATE}.iso" > "tetra-${DATE}.iso.sha256")
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@v3.7.0
-
-      - name: Sign ISO
-        env:
-          DATE: ${{ needs.build-container.outputs.date }}
-        run: |
-          cosign sign-blob --yes \
-            --bundle "output/bootiso/tetra-${DATE}.iso.cosign.bundle" \
-            "output/bootiso/tetra-${DATE}.iso"
-
-      - name: Publish release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ needs.build-container.outputs.date-hyphen }}
-          name: Tetra Weekly Build ${{ needs.build-container.outputs.date-hyphen }}
-          make_latest: true
-          fail_on_unmatched_files: true
-          files: |
-            output/bootiso/tetra-*.iso
-            output/bootiso/tetra-*.iso.sha256
-            output/bootiso/tetra-*.iso.cosign.bundle
-          body: |
-            Automated weekly build of Tetra.
-
-            **Container image**: `${{ env.IMAGE_REF }}:workstation-${{ needs.build-container.outputs.date }}`
-            **Digest**: `${{ needs.build-container.outputs.digest }}`
-
-            Installed Tetra systems pull updates automatically from `${{ env.IMAGE_REF }}:workstation`
-            via `bootc-fetch-apply-updates.timer`. To force an update now:
-
-            ```
-            sudo bootc upgrade
-            sudo systemctl reboot
-            ```
