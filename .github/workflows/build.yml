@@ -105,7 +105,11 @@ jobs:
           docker-images: true
 
       - name: Pull container image by digest
+        env:
+          GH_USER: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "$GH_TOKEN" | sudo podman login ghcr.io -u "$GH_USER" --password-stdin
           sudo podman pull "${IMAGE_REF}@${{ needs.build-container.outputs.digest }}"
 
       - name: Build installer ISO
