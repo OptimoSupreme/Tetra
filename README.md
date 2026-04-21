@@ -29,20 +29,23 @@ cosign verify \
 Build an anaconda installer ISO from the published GHCR image. The following commands require the git repo to be cloned locally, and to be run run from its root directory.
 
 ```bash
+sudo podman pull ghcr.io/optimosupreme/tetra:workstation
 sudo podman run \
   --rm -it --privileged --pull=newer \
   --security-opt label=type:unconfined_t \
   -v ./blueprint.toml:/config.toml:ro \
   -v ./output:/output \
+  -v /var/lib/containers/storage:/var/lib/containers/storage \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type anaconda-iso \
   --rootfs btrfs \
   --use-librepo=True \
   ghcr.io/optimosupreme/tetra:workstation
 sudo chown -R $USER:$USER ./output
+mv ./output/bootiso/install.iso ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
 ```
 
-The finished ISO lands at `output/bootiso/install.iso`.
+The finished ISO lands at `output/bootiso/tetra-workstation-YYYYMMDD.iso`.
 
 ## Development and testing
 
@@ -69,6 +72,7 @@ sudo podman run \
   --use-librepo=True \
   localhost/tetra:workstation
 sudo chown -R $USER:$USER ./output
+mv ./output/bootiso/install.iso ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
 ```
 
 ### Building a qcow2 image for VM testing
