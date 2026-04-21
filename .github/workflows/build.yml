@@ -43,7 +43,7 @@ jobs:
         id: meta
         run: |
           DATE=$(date -u +%Y%m%d)
-          echo "tags=workstation workstation-${DATE} latest" >> "$GITHUB_OUTPUT"
+          echo "tags=workstation workstation-${DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Build container image
         uses: redhat-actions/buildah-build@v2
@@ -74,3 +74,16 @@ jobs:
       - name: Sign container image
         run: |
           cosign sign --yes "${IMAGE_REF}@${{ steps.push.outputs.digest }}"
+
+  cleanup:
+    needs: build-container
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    steps:
+      - name: Prune old container versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: tetra
+          package-type: container
+          min-versions-to-keep: 12
