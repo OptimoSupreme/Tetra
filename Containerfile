@@ -115,3 +115,11 @@ RUN systemctl enable snapper-home-setup.service snapper-timeline.timer snapper-c
 # TPM Decryption Helper Script
 COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
 RUN chmod +x /usr/local/bin/enable-tpm-decryption
+
+# Enable automatic bootc updates on installed systems
+RUN systemctl enable bootc-fetch-apply-updates.timer
+
+LABEL containers.bootc=1
+LABEL org.opencontainers.image.source="https://github.com/OptimoSupreme/Tetra"
+LABEL org.opencontainers.image.description="Tetra — Fedora bootc workstation"
+LABEL org.opencontainers.image.licenses="MIT"

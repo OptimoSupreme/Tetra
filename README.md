@@ -1,6 +1,64 @@
 # Tetra
 
+![Weekly Build](https://github.com/OptimoSupreme/Tetra/actions/workflows/build.yml/badge.svg)
+
 This repository contains the configuration and Containerfiles for building Tetra, an atomic Fedora based Linux distribution using `bootc` (ostree + containers).
+
+## Installing Tetra
+
+Download the latest installer ISO from the [Releases page](https://github.com/OptimoSupreme/Tetra/releases/latest). Each release ships:
+
+- `tetra-YYYYMMDD.iso` — the Anaconda installer
+- `tetra-YYYYMMDD.iso.sha256` — checksum
+- `tetra-YYYYMMDD.iso.cosign.bundle` — Sigstore signature bundle
+
+Verify before flashing:
+
+```bash
+sha256sum -c tetra-YYYYMMDD.iso.sha256
+cosign verify-blob \
+  --bundle tetra-YYYYMMDD.iso.cosign.bundle \
+  --certificate-identity-regexp 'https://github.com/OptimoSupreme/Tetra/.*' \
+  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+  tetra-YYYYMMDD.iso
+```
+
+Flash to a USB stick (e.g. `sudo dd if=tetra-YYYYMMDD.iso of=/dev/sdX bs=4M status=progress oflag=sync`) and boot.
+
+## Automatic updates
+
+Installed Tetra systems track `ghcr.io/optimosupreme/tetra:workstation` and pull updates on a weekly timer (`bootc-fetch-apply-updates.timer`, enabled by default).
+
+```bash
+bootc status                 # see what's installed and what's staged
+sudo bootc upgrade           # force an update now
+sudo systemctl reboot        # apply it
+sudo bootc rollback          # revert to the previous deployment
+```
+
+To pin to a specific dated build instead of rolling:
+
+```bash
+sudo bootc switch ghcr.io/optimosupreme/tetra:workstation-20260420
+```
+
+To verify the running image's signature:
+
+```bash
+cosign verify \
+  --certificate-identity-regexp 'https://github.com/OptimoSupreme/Tetra/.*' \
+  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+  ghcr.io/optimosupreme/tetra:workstation
+```
+
+## Migrating a locally-installed Tetra to GHCR updates
+
+If your machine was installed from a locally-built ISO (pre-CI), point it at the published image once:
+
+```bash
+sudo bootc switch ghcr.io/optimosupreme/tetra:workstation
+sudo systemctl enable --now bootc-fetch-apply-updates.timer
+```
 
 ## Building the OS container
 
