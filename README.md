@@ -26,7 +26,7 @@ cosign verify \
 
 ## Building an installer ISO
 
-Build an anaconda installer ISO from the published GHCR image:
+Build an anaconda installer ISO from the published GHCR image. The following commands require the git repo to be cloned locally, and to be run run from its root directory.
 
 ```bash
 sudo podman run \
@@ -46,7 +46,7 @@ The finished ISO lands at `output/bootiso/install.iso`.
 
 ## Development and testing
 
-These recipes are for iterating on Tetra locally against uncommitted changes to the Containerfile. For a normal install, use the GHCR-based ISO build above. They require the git repo to be cloned locally, and the commands run from its root directory.
+These recipes are for iterating on Tetra locally against uncommitted changes to the Containerfile. For a normal install, use the GHCR-based ISO build above. The following commands require the git repo to be cloned locally, and to be run run from its root directory.
 
 ### Building the OS container locally
 
