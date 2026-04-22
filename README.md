@@ -9,19 +9,10 @@ This repository contains the configuration and Containerfiles for building Tetra
 Installed Tetra systems track `ghcr.io/optimosupreme/tetra:workstation` and pull updates on a weekly timer (`bootc-fetch-apply-updates.timer`, enabled by default).
 
 ```bash
-bootc status                 # see what's installed and what's staged
+sudo bootc status                 # see what's installed and what's staged
 sudo bootc upgrade           # force an update now
 sudo systemctl reboot        # apply it
 sudo bootc rollback          # revert to the previous deployment
-```
-
-To verify the running image's signature:
-
-```bash
-cosign verify \
-  --certificate-identity-regexp 'https://github.com/OptimoSupreme/Tetra/.*' \
-  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  ghcr.io/optimosupreme/tetra:workstation
 ```
 
 ## Building an installer ISO
