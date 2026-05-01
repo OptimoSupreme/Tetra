@@ -1,0 +1,19 @@
+{
+  "policies": {
+    "NoDefaultBookmarks": true,
+    "ExtensionSettings": {
+      "uBlock0@raymondhill.net": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+      },
+      "sponsorBlocker@ajay.app": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi"
+      }
+    },
+    "SearchEngines": {
+      "Default": "Google",
+      "Remove": ["Bing", "Amazon.com", "DuckDuckGo", "eBay", "Wikipedia (en)", "Perplexity", "Perplexity AI", "Ask Perplexity"]
+    }
+  }
+}

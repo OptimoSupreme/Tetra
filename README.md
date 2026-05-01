@@ -86,17 +86,29 @@ sudo chown -R $USER:$USER ./output
 
 The finished disk will land at `output/qcow2/disk.qcow2`.
 
-Launch the VM:
+Launch the VM via libvirt's user session (no root, no SELinux issues, full
+SPICE clipboard support). Requires `virt-manager` and `libvirt-daemon`
+installed on the host:
+
 ```bash
-qemu-system-x86_64 \
-  -enable-kvm \
-  -cpu host \
-  -smp 4 \
-  -m 8192 \
-  -drive if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd \
-  -device virtio-vga-gl \
-  -display gtk,gl=on \
-  -device virtio-net-pci,netdev=n0 \
-  -netdev user,id=n0,hostfwd=tcp::2222-:22 \
-  -drive file=./output/qcow2/disk.qcow2,if=virtio,cache=writeback
+virt-install --connect qemu:///session \
+  --name tetra \
+  --memory 8192 --vcpus 4 --cpu host-passthrough \
+  --boot uefi \
+  --disk path="$PWD/output/qcow2/disk.qcow2",bus=virtio \
+  --network user,model=virtio \
+  --graphics spice,gl=on,listen=none \
+  --video virtio \
+  --channel spicevmc \
+  --osinfo fedora-unknown \
+  --import --noautoconsole
 ```
+
+Then open **virt-manager**. The first time only, add the user-session
+connection: **File → Add Connection → QEMU/KVM User session → Connect**.
+Double-click `tetra` under that connection to view the VM with clipboard
+sharing enabled.
+
+To rebuild and re-import: in virt-manager, right-click `tetra` → **Delete**
+(leave **Delete associated storage files** unchecked so the qcow2 path stays
+free for the new build). Then re-run the build and `virt-install` commands.

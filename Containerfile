@@ -24,7 +24,9 @@ RUN dnf install -y \
         breeze-cursor-theme \
         btrfs-assistant \
         distrobox \
-        langpacks-en && \
+        langpacks-en \
+        spice-vdagent \
+        qemu-guest-agent && \
     dnf remove -y \
         gnome-contacts \
         gnome-weather \
@@ -105,6 +107,11 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
 
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
+
+# Firefox configuration
+COPY assets/firefox/autoconfig.js /usr/lib64/firefox/defaults/pref/autoconfig.js
+COPY assets/firefox/mozilla.cfg /usr/lib64/firefox/mozilla.cfg
+COPY assets/firefox/policies.json /etc/firefox/policies/policies.json
 
 # Btrfs Snapshots
 COPY assets/btrfs-assistant.conf /etc/btrfs-assistant.conf
