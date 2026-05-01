@@ -23,6 +23,7 @@ RUN dnf install -y \
         cryptsetup \
         breeze-cursor-theme \
         btrfs-assistant \
+        distrobox \
         langpacks-en && \
     dnf remove -y \
         gnome-contacts \
@@ -39,7 +40,8 @@ RUN dnf install -y \
         gnome-logs \
         gnome-tour \
         yelp \
-        malcontent-control
+        malcontent-control \
+        toolbox
 
 # Multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
