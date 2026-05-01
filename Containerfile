@@ -42,8 +42,7 @@ RUN dnf install -y \
         gnome-logs \
         gnome-tour \
         yelp \
-        malcontent-control \
-        toolbox
+        malcontent-control
 
 # Multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
