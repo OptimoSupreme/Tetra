@@ -46,8 +46,7 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
     dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
 # GPU drivers (mesa freeworld + intel-media-driver)
-RUN dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld && \
-    dnf install -y intel-media-driver
+RUN dnf install -y mesa-va-drivers-freeworld intel-media-driver
 
 # Fastfetch
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
