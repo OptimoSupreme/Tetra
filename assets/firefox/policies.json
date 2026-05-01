@@ -1,6 +1,18 @@
 {
   "policies": {
     "NoDefaultBookmarks": true,
+    "DisableFirefoxStudies": true,
+    "DisableRemoteImprovements": true,
+    "FirefoxSuggest": {
+      "WebSuggestions": false,
+      "SponsoredSuggestions": false,
+      "Locked": true
+    },
+    "Preferences": {
+      "sidebar.revamp": { "Value": false, "Status": "locked" },
+      "sidebar.verticalTabs": { "Value": false, "Status": "locked" },
+      "signon.firefoxRelay.feature": { "Value": "disabled", "Status": "locked" }
+    },
     "ExtensionSettings": {
       "uBlock0@raymondhill.net": {
         "installation_mode": "normal_installed",
