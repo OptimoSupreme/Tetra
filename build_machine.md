@@ -23,9 +23,7 @@ sudo chown -R $USER:$USER ./output
 
 The disk lands at `~/git/Tetra/output/qcow2/disk.qcow2` on bolg.
 
-## Running a test VM on bolg, viewing it from the local laptop
-
-On **bolg**, after the qcow2 build:
+## Running a test VM on bolg
 
 ```bash
 sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
@@ -64,10 +62,4 @@ sudo podman run \
 sudo chown -R $USER:$USER ./output
 mv ./output/bootiso/install.iso \
    ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
-```
-
-To pull the finished ISO to the local laptop:
-
-```bash
-scp bolg:git/Tetra/output/bootiso/tetra-workstation-*.iso ./
 ```
