@@ -17,15 +17,8 @@ sudo podman run \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type qcow2 --rootfs btrfs --use-librepo=True \
   localhost/tetra:workstation
-
 sudo chown -R $USER:$USER ./output
-```
 
-The disk lands at `~/git/Tetra/output/qcow2/disk.qcow2` on orc.
-
-## Running a test VM on orc
-
-```bash
 sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
         /var/lib/libvirt/images/tetra.qcow2
 
