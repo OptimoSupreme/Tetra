@@ -31,7 +31,7 @@ sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
 
 virt-install --connect qemu:///system \
   --name tetra \
-  --memory 8192 --vcpus 4 --cpu host-passthrough \
+  --memory 8192 --vcpus 6 --cpu host-passthrough \
   --boot uefi \
   --disk path=/var/lib/libvirt/images/tetra.qcow2,bus=virtio \
   --network network=default,model=virtio \

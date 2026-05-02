@@ -93,7 +93,7 @@ installed on the host:
 ```bash
 virt-install --connect qemu:///session \
   --name tetra \
-  --memory 8192 --vcpus 4 --cpu host-passthrough \
+  --memory 8192 --vcpus 6 --cpu host-passthrough \
   --boot uefi \
   --disk path="$PWD/output/qcow2/disk.qcow2",bus=virtio \
   --network user,model=virtio \
