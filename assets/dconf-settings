@@ -37,7 +37,7 @@ folder-children=['Utilities']
 
 [org/gnome/desktop/app-folders/folders/Utilities]
 name='Utilities'
-apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.SystemMonitor.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.SystemMonitor.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
@@ -57,6 +57,12 @@ remember-recent-files=false
 remove-old-trash-files=true
 remove-old-temp-files=true
 old-files-age=uint32 3
+
+[org/gnome/nautilus/preferences]
+default-sort-order='type'
+
+[org/gtk/gtk4/settings/file-chooser]
+sort-directories-first=true
 
 [org/gnome/Ptyxis]
 use-system-font=false
