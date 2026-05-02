@@ -1,11 +1,10 @@
 ## Building Tetra on orc
 
 ```bash
-ssh orc
 cd ~/git/Tetra
 git pull
 
-# Build the OS container (~5–10 GB layer cache)
+# Build the OS container
 sudo podman build -t localhost/tetra:workstation .
 
 # Build the qcow2 for VM testing
