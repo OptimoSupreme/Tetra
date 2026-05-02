@@ -46,7 +46,12 @@ RUN dnf install -y \
         gnome-logs \
         gnome-tour \
         yelp \
-        malcontent-control
+        malcontent-control \
+        gnome-shell-extension-apps-menu \
+        gnome-shell-extension-background-logo \
+        gnome-shell-extension-launch-new-instance \
+        gnome-shell-extension-places-menu \
+        gnome-shell-extension-window-list
 
 # Multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
