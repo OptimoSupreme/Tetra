@@ -47,6 +47,8 @@ RUN dnf install -y \
         gnome-tour \
         yelp \
         malcontent-control \
+        gnome-system-monitor \
+        gnome-extensions-app \
         gnome-shell-extension-apps-menu \
         gnome-shell-extension-background-logo \
         gnome-shell-extension-launch-new-instance \
@@ -131,6 +133,10 @@ RUN systemctl enable snapper-home-setup.service snapper-timeline.timer snapper-c
 # TPM Decryption Helper Script
 COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
 RUN chmod +x /usr/local/bin/enable-tpm-decryption
+
+# First-boot flatpak installation
+COPY assets/tetra-flatpak-setup.service /usr/lib/systemd/system/tetra-flatpak-setup.service
+RUN systemctl enable tetra-flatpak-setup.service
 
 # Enable automatic bootc updates on installed systems
 RUN systemctl enable bootc-fetch-apply-updates.timer

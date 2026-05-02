@@ -29,7 +29,7 @@ night-light-temperature=uint32 4000
 
 [org/gnome/shell]
 favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']
-app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'Utilities': <{'position': <4>}>}]
+app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'org.onlyoffice.desktopeditors.desktop': <{'position': <4>}>, 'Utilities': <{'position': <5>}>}]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-panel@jderose9.github.com']
 
 [org/gnome/desktop/app-folders]
@@ -37,7 +37,7 @@ folder-children=['Utilities']
 
 [org/gnome/desktop/app-folders/folders/Utilities]
 name='Utilities'
-apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.SystemMonitor.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'net.nokyan.Resources.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
