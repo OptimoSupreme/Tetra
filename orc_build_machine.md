@@ -1,6 +1,7 @@
 ## Building Tetra on orc
 
 ```bash
+# Switch to the Tetra git directory and sync it with remote
 cd ~/git/Tetra
 git pull
 
