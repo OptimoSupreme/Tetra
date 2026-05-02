@@ -26,7 +26,11 @@ RUN dnf install -y \
         distrobox \
         langpacks-en \
         spice-vdagent \
-        qemu-guest-agent && \
+        qemu-guest-agent \
+        gnome-shell-extension-appindicator \
+        gnome-shell-extension-blur-my-shell \
+        gnome-shell-extension-caffeine \
+        gnome-shell-extension-dash-to-panel && \
     dnf remove -y \
         gnome-contacts \
         gnome-weather \
