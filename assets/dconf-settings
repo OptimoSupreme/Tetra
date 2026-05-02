@@ -76,3 +76,12 @@ profile-uuids=['00000000-0000-0000-0000-000000000000']
 [org/gnome/Ptyxis/Profiles/00000000-0000-0000-0000-000000000000]
 label='Default'
 palette='Dark Pastel'
+
+[org/gnome/shell/extensions/blur-my-shell/dash-to-panel]
+blur-original-panel=true
+
+[org/gnome/shell/extensions/blur-my-shell/appfolder]
+style-dialogs=2
+
+[org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
+override-background=false
