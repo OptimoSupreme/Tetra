@@ -1,7 +1,7 @@
-## Building Tetra on bolg
+## Building Tetra on orc
 
 ```bash
-ssh bolg
+ssh orc
 cd ~/git/Tetra
 git pull
 
@@ -21,9 +21,9 @@ sudo podman run \
 sudo chown -R $USER:$USER ./output
 ```
 
-The disk lands at `~/git/Tetra/output/qcow2/disk.qcow2` on bolg.
+The disk lands at `~/git/Tetra/output/qcow2/disk.qcow2` on orc.
 
-## Running a test VM on bolg
+## Running a test VM on orc
 
 ```bash
 sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
@@ -42,10 +42,10 @@ virt-install --connect qemu:///system \
   --import --noautoconsole
 ```
 
-## Building the installer ISO on bolg
+## Building the installer ISO on orc
 
 ```bash
-ssh bolg
+ssh orc
 cd ~/git/Tetra
 
 sudo podman pull ghcr.io/optimosupreme/tetra:workstation
