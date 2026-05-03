@@ -23,7 +23,6 @@ RUN dnf install -y \
         cryptsetup \
         breeze-cursor-theme \
         btrfs-assistant \
-        distrobox \
         langpacks-en \
         spice-vdagent \
         qemu-guest-agent \
@@ -46,6 +45,7 @@ RUN dnf install -y \
         gnome-logs \
         gnome-tour \
         yelp \
+        podman \
         malcontent-control \
         gnome-system-monitor \
         gnome-extensions-app \
