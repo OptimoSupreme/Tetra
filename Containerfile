@@ -16,44 +16,44 @@ RUN dnf install -y \
         https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
     dnf install -y \
         @workstation-product-environment \
-        git \
-        unzip \
-        fastfetch \
-        tpm2-tools \
-        cryptsetup \
         breeze-cursor-theme \
         btrfs-assistant \
-        langpacks-en \
-        spice-vdagent \
-        qemu-guest-agent \
+        cryptsetup \
+        fastfetch \
+        git \
         gnome-shell-extension-appindicator \
         gnome-shell-extension-blur-my-shell \
         gnome-shell-extension-caffeine \
-        gnome-shell-extension-dash-to-panel && \
+        gnome-shell-extension-dash-to-panel \
+        langpacks-en \
+        qemu-guest-agent \
+        spice-vdagent \
+        tpm2-tools \
+        unzip && \
     dnf remove -y \
-        gnome-contacts \
-        gnome-weather \
-        gnome-clocks \
-        mediawriter \
-        gnome-maps \
-        libreoffice* \
         gnome-boxes \
-        gnome-connections \
-        snapshot \
         gnome-characters \
+        gnome-clocks \
+        gnome-connections \
+        gnome-contacts \
+        gnome-extensions-app \
         gnome-font-viewer \
         gnome-logs \
-        gnome-tour \
-        yelp \
-        podman \
-        malcontent-control \
-        gnome-system-monitor \
-        gnome-extensions-app \
+        gnome-maps \
         gnome-shell-extension-apps-menu \
         gnome-shell-extension-background-logo \
         gnome-shell-extension-launch-new-instance \
         gnome-shell-extension-places-menu \
-        gnome-shell-extension-window-list
+        gnome-shell-extension-window-list \
+        gnome-system-monitor \
+        gnome-tour \
+        gnome-weather \
+        libreoffice* \
+        malcontent-control \
+        mediawriter \
+        podman \
+        snapshot \
+        yelp
 
 # Multimedia codecs
 RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
