@@ -6,7 +6,7 @@ cd ~/git/Tetra
 git pull
 
 # Build the OS container
-sudo podman build -t localhost/tetra:workstation .
+sudo podman build -t localhost/tetra:main .
 
 # Build the qcow2 for VM testing
 sudo podman run \
@@ -16,7 +16,7 @@ sudo podman run \
   -v /var/lib/containers/storage:/var/lib/containers/storage \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type qcow2 --rootfs btrfs --use-librepo=True \
-  localhost/tetra:workstation
+  localhost/tetra:main
 sudo chown -R $USER:$USER ./output
 
 sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
@@ -41,7 +41,7 @@ virt-install --connect qemu:///system \
 ssh orc
 cd ~/git/Tetra
 
-sudo podman pull ghcr.io/optimosupreme/tetra:workstation
+sudo podman pull ghcr.io/optimosupreme/tetra:main
 sudo podman run \
   --rm -it --privileged --pull=newer \
   --security-opt label=type:unconfined_t \
@@ -50,9 +50,9 @@ sudo podman run \
   -v /var/lib/containers/storage:/var/lib/containers/storage \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type anaconda-iso --rootfs btrfs --use-librepo=True \
-  ghcr.io/optimosupreme/tetra:workstation
+  ghcr.io/optimosupreme/tetra:main
 
 sudo chown -R $USER:$USER ./output
 mv ./output/bootiso/install.iso \
-   ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
+   ./output/bootiso/tetra-main-$(date -u +%Y%m%d).iso
 ```

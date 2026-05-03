@@ -43,7 +43,7 @@ jobs:
         id: meta
         run: |
           DATE=$(date -u +%Y%m%d)
-          echo "tags=workstation workstation-${DATE}" >> "$GITHUB_OUTPUT"
+          echo "tags=main main-${DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Build container image
         uses: redhat-actions/buildah-build@v2

@@ -6,7 +6,7 @@ This repository contains the configuration and Containerfiles for building Tetra
 
 ## Bootc tools
 
-Installed Tetra systems track `ghcr.io/optimosupreme/tetra:workstation` and pull updates on a weekly timer (`bootc-fetch-apply-updates.timer`, enabled by default).
+Installed Tetra systems track `ghcr.io/optimosupreme/tetra:main` and pull updates on a weekly timer (`bootc-fetch-apply-updates.timer`, enabled by default).
 
 ```bash
 sudo bootc status            # see what's installed and what's staged
@@ -20,7 +20,7 @@ sudo bootc rollback          # revert to the previous deployment
 Build an anaconda installer ISO from the published GHCR image. The following commands require the git repo to be cloned locally, and to be run run from its root directory.
 
 ```bash
-sudo podman pull ghcr.io/optimosupreme/tetra:workstation
+sudo podman pull ghcr.io/optimosupreme/tetra:main
 sudo podman run \
   --rm -it --privileged --pull=newer \
   --security-opt label=type:unconfined_t \
@@ -31,12 +31,12 @@ sudo podman run \
   --type anaconda-iso \
   --rootfs btrfs \
   --use-librepo=True \
-  ghcr.io/optimosupreme/tetra:workstation
+  ghcr.io/optimosupreme/tetra:main
 sudo chown -R $USER:$USER ./output
-mv ./output/bootiso/install.iso ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
+mv ./output/bootiso/install.iso ./output/bootiso/tetra-main-$(date -u +%Y%m%d).iso
 ```
 
-The finished ISO lands at `output/bootiso/tetra-workstation-YYYYMMDD.iso`.
+The finished ISO lands at `output/bootiso/tetra-main-YYYYMMDD.iso`.
 
 ## Development and testing
 
@@ -45,7 +45,7 @@ These recipes are for iterating on Tetra locally against uncommitted changes to 
 ### Building the OS container locally
 
 ```bash
-sudo podman build -t localhost/tetra:workstation .
+sudo podman build -t localhost/tetra:main .
 ```
 
 ### Building an installer ISO from the local container
@@ -61,9 +61,9 @@ sudo podman run \
   --type anaconda-iso \
   --rootfs btrfs \
   --use-librepo=True \
-  localhost/tetra:workstation
+  localhost/tetra:main
 sudo chown -R $USER:$USER ./output
-mv ./output/bootiso/install.iso ./output/bootiso/tetra-workstation-$(date -u +%Y%m%d).iso
+mv ./output/bootiso/install.iso ./output/bootiso/tetra-main-$(date -u +%Y%m%d).iso
 ```
 
 ### Building a qcow2 image for VM testing
@@ -80,7 +80,7 @@ sudo podman run \
   --type qcow2 \
   --rootfs btrfs \
   --use-librepo=True \
-  localhost/tetra:workstation
+  localhost/tetra:main
 sudo chown -R $USER:$USER ./output
 ```
 
