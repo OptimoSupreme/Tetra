@@ -51,8 +51,8 @@ RUN dnf install -y \
         libreoffice* \
         malcontent-control \
         mediawriter \
-        podman \
         snapshot \
+        toolbox \
         yelp
 
 # Multimedia codecs
