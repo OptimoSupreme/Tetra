@@ -88,3 +88,17 @@ style-dialogs=2
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
 override-background=false
+
+[org/gnome/shell/extensions/dash-to-panel]
+appicon-margin=2
+dot-style-focused='DOTS'
+dot-style-unfocused='DOTS'
+focus-highlight-dominant=true
+focus-highlight-opacity=20
+hide-overview-on-startup=true
+isolate-monitors=true
+isolate-workspaces=true
+overview-click-to-exit=true
+show-window-previews=false
+panel-sizes='{"0":36}'
+panel-element-positions='{"0":[{"element":"showAppsButton","visible":true,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":true,"position":"stackedBR"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":false,"position":"stackedBR"}]}'
