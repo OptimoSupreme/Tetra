@@ -36,7 +36,7 @@ sudo chown -R $USER:$USER ./output
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
 
-The finished ISO lands at `output/bootiso/tetra-main-YYYYMMDD.iso`.
+The finished ISO lands at `output/bootiso/tetra-YYYYMMDD.iso`.
 
 ## Development and testing
 
