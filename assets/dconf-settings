@@ -89,6 +89,12 @@ style-dialogs=2
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
 override-background=false
 
+[org/gnome/shell/keybindings]
+screenshot=['<Print>']
+show-screenshot-ui=['<Control><Print>']
+screenshot-window=@as []
+show-screen-recording-ui=@as []
+
 [org/gnome/shell/extensions/dash-to-panel]
 appicon-margin=2
 dot-style-focused='DOTS'
