@@ -64,6 +64,9 @@ sudo podman run \
   localhost/tetra:main
 sudo chown -R $USER:$USER ./output
 
+# Resize the qcow2 to a 30G disk
+qemu-img resize ./output/qcow2/disk.qcow2 30G
+
 # Install the VM
 sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
         /var/lib/libvirt/images/tetra.qcow2
