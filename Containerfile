@@ -10,7 +10,7 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
-# Core Packages
+# Package installs and removals
 RUN dnf install -y \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
         https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
