@@ -65,13 +65,16 @@ sudo podman run \
 sudo chown -R $USER:$USER ./output
 
 # Install the VM
-virt-install --connect qemu:///session \
+sudo cp ~/git/Tetra/output/qcow2/disk.qcow2 \
+        /var/lib/libvirt/images/tetra.qcow2
+
+virt-install --connect qemu:///system \
   --name tetra \
   --memory 8192 --vcpus 6 --cpu host-passthrough \
   --boot uefi \
-  --disk path="$PWD/output/qcow2/disk.qcow2",bus=virtio \
-  --network user,model=virtio \
-  --graphics spice,gl=on,listen=none \
+  --disk path=/var/lib/libvirt/images/tetra.qcow2,bus=virtio \
+  --network network=default,model=virtio \
+  --graphics spice,listen=socket \
   --video virtio \
   --channel spicevmc \
   --osinfo fedora-unknown \
