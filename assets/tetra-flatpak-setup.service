@@ -8,7 +8,7 @@ After=network-online.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPre=/usr/bin/flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub org.onlyoffice.desktopeditors net.nokyan.Resources com.mattjakeman.ExtensionManager
+ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub org.onlyoffice.desktopeditors com.vixalien.sticky net.nokyan.Resources com.mattjakeman.ExtensionManager
 ExecStartPost=/usr/bin/touch /var/lib/tetra-flatpaks-installed
 
 [Install]
