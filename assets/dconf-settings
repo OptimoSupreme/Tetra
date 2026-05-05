@@ -99,10 +99,9 @@ style-dialogs=2
 override-background=false
 
 [org/gnome/shell/keybindings]
-screenshot=['<Print>']
-show-screenshot-ui=['<Control><Print>']
+screenshot=['Print']
+show-screenshot-ui=['<Control>Print']
 screenshot-window=@as []
-show-screen-recording-ui=@as []
 
 [org/gnome/shell/extensions/dash-to-panel]
 appicon-margin=2
