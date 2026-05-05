@@ -70,6 +70,12 @@ sort-directories-first=true
 [org/gtk/gtk4/settings/file-chooser]
 sort-directories-first=true
 
+[org/gnome/TextEditor]
+style-scheme='classic-dark'
+show-line-numbers=true
+highlight-current-line=true
+restore-session=false
+
 [org/gnome/Ptyxis]
 use-system-font=false
 font-name='Monospace 11'
