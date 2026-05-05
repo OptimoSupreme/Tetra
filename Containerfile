@@ -64,7 +64,7 @@ RUN dnf install -y mesa-va-drivers-freeworld intel-media-driver
 
 # Fastfetch
 RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/skel/.config/fastfetch && \
-    echo 'fastfetch' >> /etc/bashrc
+    echo '[[ $- == *i* ]] && fastfetch' >> /etc/bashrc
 
 # Housekeeping
 RUN dnf autoremove -y && \
