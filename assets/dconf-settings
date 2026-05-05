@@ -27,6 +27,9 @@ night-light-enabled=true
 night-light-schedule-automatic=true
 night-light-temperature=uint32 4000
 
+[org/gnome/settings-daemon/plugins/housekeeping]
+donation-reminder-enabled=false
+
 [org/gnome/shell]
 favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']
 app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'org.onlyoffice.desktopeditors.desktop': <{'position': <4>}>, 'com.vixalien.sticky.desktop': <{'position': <5>}>, 'Utilities': <{'position': <6>}>}]
