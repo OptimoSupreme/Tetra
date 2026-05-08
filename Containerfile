@@ -142,7 +142,10 @@ RUN chmod +x /usr/local/bin/enable-tpm-decryption
 COPY assets/tetra-flatpak-setup.service /usr/lib/systemd/system/tetra-flatpak-setup.service
 RUN systemctl enable tetra-flatpak-setup.service
 
-# Enable automatic bootc updates on installed systems
+# Configure updates
+COPY assets/bootc-update-service-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.service.d/10-tetra.conf
+COPY assets/bootc-update-timer-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.timer.d/10-tetra.conf
+COPY --chmod=0755 assets/tetra-update-notify /usr/libexec/tetra-update-notify
 RUN systemctl enable bootc-fetch-apply-updates.timer
 
 LABEL containers.bootc=1

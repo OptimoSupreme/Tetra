@@ -1,0 +1,23 @@
+#!/bin/bash
+set -eu
+
+bootc status 2>/dev/null | grep -q "^Staged " || exit 0
+
+for runtime_dir in /run/user/*; do
+    [ -d "$runtime_dir" ] || continue
+    uid=${runtime_dir##*/}
+    [[ "$uid" =~ ^[0-9]+$ ]] || continue
+    [ "$uid" -ge 1000 ] || continue
+    [ -S "$runtime_dir/bus" ] || continue
+    user=$(getent passwd "$uid" | cut -d: -f1) || continue
+    [ -n "$user" ] || continue
+    runuser -u "$user" -- env \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime_dir/bus" \
+        XDG_RUNTIME_DIR="$runtime_dir" \
+        notify-send \
+        --app-name="System Updates" \
+        --icon=system-software-update \
+        --urgency=normal \
+        "System update ready" \
+        "A system update is staged, restart to apply." 2>/dev/null || true
+done
