@@ -73,7 +73,13 @@ jobs:
 
       - name: Sign container image
         run: |
-          cosign sign --yes "${IMAGE_REF}@${{ steps.push.outputs.digest }}"
+          DIGEST="${{ steps.push.outputs.digest }}"
+          SIG_TAG="$(cosign triangulate "${IMAGE_REF}@${DIGEST}")"
+          if skopeo inspect "docker://${SIG_TAG}" >/dev/null 2>&1; then
+            echo "Signature already exists for ${DIGEST}, skipping."
+          else
+            cosign sign --yes "${IMAGE_REF}@${DIGEST}"
+          fi
 
   cleanup:
     needs: build-container
