@@ -62,11 +62,28 @@ jobs:
 
       - name: Push to GHCR
         id: push
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: ${{ steps.meta.outputs.tags }}
-          registry: ${{ env.IMAGE_REGISTRY }}
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          set -e
+          digestfile="$(mktemp)"
+          for tag in $TAGS; do
+            for attempt in 1 2 3 4 5; do
+              if podman push --quiet --digestfile "$digestfile" \
+                   "${IMAGE_NAME}:${tag}" \
+                   "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" --tls-verify=true; then
+                break
+              fi
+              if [ "$attempt" = "5" ]; then
+                echo "Push of ${tag} failed after 5 attempts" >&2
+                exit 1
+              fi
+              delay=$((attempt * 15))
+              echo "Push of ${tag} failed, retrying in ${delay}s (attempt $((attempt+1))/5)..." >&2
+              sleep "$delay"
+            done
+          done
+          echo "digest=$(cat "$digestfile")" >> "$GITHUB_OUTPUT"
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v3.7.0
