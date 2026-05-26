@@ -2,6 +2,7 @@
 cursor-theme='Breeze_Light'
 color-scheme='prefer-dark'
 accent-color='orange'
+show-battery-percentage=true
 
 [org/gnome/login-screen]
 logo='/usr/share/pixmaps/trademark.png'
