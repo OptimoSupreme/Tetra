@@ -16,6 +16,10 @@ env:
   IMAGE_NAME: tetra
   IMAGE_REGISTRY: ghcr.io/optimosupreme
   IMAGE_REF: ghcr.io/optimosupreme/tetra
+  # Temporary opt-out for Node 20 actions after the 2026-06-02 runner default
+  # flips to Node 24. Remove once redhat-actions/* and actions/delete-package-versions
+  # ship Node 24 tagged releases.
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   build-container:
