@@ -122,6 +122,9 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
 # Polkit rules
 COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
 
+# Add pam_fprintd to the PAM stack so GDM offers fingerprint auth on machines with a reader
+RUN authselect enable-feature with-fingerprint
+
 # Firefox configuration
 COPY assets/firefox/autoconfig.js /usr/lib64/firefox/defaults/pref/autoconfig.js
 COPY assets/firefox/mozilla.cfg /usr/lib64/firefox/mozilla.cfg
