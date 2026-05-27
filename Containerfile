@@ -141,9 +141,9 @@ RUN systemctl enable snapper-home-setup.service snapper-timeline.timer snapper-c
 COPY assets/enable-tpm-decryption /usr/local/bin/enable-tpm-decryption
 RUN chmod +x /usr/local/bin/enable-tpm-decryption
 
-# First-boot flatpak installation
-COPY assets/tetra-flatpak-setup.service /usr/lib/systemd/system/tetra-flatpak-setup.service
-RUN systemctl enable tetra-flatpak-setup.service
+# Setup Service
+COPY assets/tetra-setup.service /usr/lib/systemd/system/tetra-setup.service
+RUN systemctl enable tetra-setup.service
 
 # Configure updates
 COPY assets/bootc-update-service-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.service.d/10-tetra.conf

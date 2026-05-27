@@ -1,0 +1,20 @@
+[Unit]
+Description=Tetra first-boot setup (root label, default flatpaks)
+ConditionPathExists=!/var/lib/tetra-setup-complete
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/sh -c 'if [ "$(findmnt -no FSTYPE /)" = btrfs ] && [ "$(btrfs filesystem label /)" != tetra ]; then btrfs filesystem label / tetra; fi'
+ExecStartPre=/usr/bin/flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub \
+    org.onlyoffice.desktopeditors \
+    com.vixalien.sticky \
+    net.nokyan.Resources \
+    com.mattjakeman.ExtensionManager
+ExecStartPost=/usr/bin/touch /var/lib/tetra-setup-complete
+
+[Install]
+WantedBy=multi-user.target

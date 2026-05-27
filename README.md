@@ -33,6 +33,21 @@ sudo podman run \
   --use-librepo=True \
   ghcr.io/optimosupreme/tetra:main
 sudo chown -R $USER:$USER ./output
+
+# Rebrand the installer volume ID (the USB partition name): Fedora-* → Tetra
+ISO=./output/bootiso/install.iso
+NEW=Tetra
+OLD=$(xorriso -indev "$ISO" -toc 2>/dev/null | awk -F"'" '/Volume id/{print $2;exit}')
+W=$(mktemp -d)
+xorriso -osirrox on -indev "$ISO" -extract / "$W" 2>/dev/null
+U=()
+while IFS= read -r f; do
+  sed -i "s|LABEL=${OLD}|LABEL=${NEW}|g" "$W/$f"
+  U+=(-update "$W/$f" "/$f")
+done < <(cd "$W" && grep -rl "LABEL=${OLD}" . | sed 's|^\./||')
+xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
+mv "$ISO.new" "$ISO" && rm -rf "$W"
+
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
 
@@ -99,5 +114,20 @@ sudo podman run \
   --use-librepo=True \
   localhost/tetra:main
 sudo chown -R $USER:$USER ./output
+
+# Rebrand the installer volume ID (the USB partition name): Fedora-* → Tetra
+ISO=./output/bootiso/install.iso
+NEW=Tetra
+OLD=$(xorriso -indev "$ISO" -toc 2>/dev/null | awk -F"'" '/Volume id/{print $2;exit}')
+W=$(mktemp -d)
+xorriso -osirrox on -indev "$ISO" -extract / "$W" 2>/dev/null
+U=()
+while IFS= read -r f; do
+  sed -i "s|LABEL=${OLD}|LABEL=${NEW}|g" "$W/$f"
+  U+=(-update "$W/$f" "/$f")
+done < <(cd "$W" && grep -rl "LABEL=${OLD}" . | sed 's|^\./||')
+xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
+mv "$ISO.new" "$ISO" && rm -rf "$W"
+
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
