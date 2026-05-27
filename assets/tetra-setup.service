@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=/usr/bin/sh -c 'if [ "$(findmnt -no FSTYPE /)" = btrfs ] && [ "$(btrfs filesystem label /)" != tetra ]; then btrfs filesystem label / tetra; fi'
+ExecStartPre=/usr/bin/sh -c 'if [ "$(findmnt -no FSTYPE /var)" = btrfs ] && [ "$(btrfs filesystem label /var)" != tetra ]; then btrfs filesystem label /var tetra; fi'
 ExecStartPre=/usr/bin/flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub \
     org.onlyoffice.desktopeditors \
