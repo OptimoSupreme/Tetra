@@ -20,6 +20,7 @@ sudo bootc rollback          # revert to the previous deployment
 Build an anaconda installer ISO from the published GHCR image. The following commands require the git repo to be cloned locally, and to be run run from its root directory.
 
 ```bash
+# Build the ISO
 sudo podman pull ghcr.io/optimosupreme/tetra:main
 sudo podman run \
   --rm -it --privileged --pull=newer \
@@ -34,7 +35,7 @@ sudo podman run \
   ghcr.io/optimosupreme/tetra:main
 sudo chown -R $USER:$USER ./output
 
-# Rebrand the installer volume ID (the USB partition name): Fedora-* → Tetra
+# Rename the installer volume ID
 ISO=./output/bootiso/install.iso
 NEW=Tetra
 OLD=$(xorriso -indev "$ISO" -toc 2>/dev/null | awk -F"'" '/Volume id/{print $2;exit}')
@@ -48,6 +49,7 @@ done < <(cd "$W" && grep -rl "LABEL=${OLD}" . | sed 's|^\./||')
 xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
 mv "$ISO.new" "$ISO" && rm -rf "$W"
 
+# Rename the ISO
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
 
@@ -102,6 +104,7 @@ virt-install --connect qemu:///system \
 ### Building an installer ISO from the local container
 
 ```bash
+# Build the ISO
 sudo podman run \
   --rm -it --privileged --pull=newer \
   --security-opt label=type:unconfined_t \
@@ -115,7 +118,7 @@ sudo podman run \
   localhost/tetra:main
 sudo chown -R $USER:$USER ./output
 
-# Rebrand the installer volume ID (the USB partition name): Fedora-* → Tetra
+# Rename the installer volume ID
 ISO=./output/bootiso/install.iso
 NEW=Tetra
 OLD=$(xorriso -indev "$ISO" -toc 2>/dev/null | awk -F"'" '/Volume id/{print $2;exit}')
@@ -129,5 +132,6 @@ done < <(cd "$W" && grep -rl "LABEL=${OLD}" . | sed 's|^\./||')
 xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
 mv "$ISO.new" "$ISO" && rm -rf "$W"
 
+# Rename the ISO
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
