@@ -35,28 +35,6 @@ sudo podman run \
   ghcr.io/optimosupreme/tetra:main
 sudo chown -R $USER:$USER ./output
 
-# Rename the installer volume ID
-ISO=./output/bootiso/install.iso
-NEW=Tetra
-OLD=$(xorriso -indev "$ISO" -toc 2>&1 | awk -F"'" '/Volume id/{print $2;exit}')
-[ -n "$OLD" ] || { echo "ERROR: could not read volid from $ISO" >&2; return 1 2>/dev/null || exit 1; }
-W=$(mktemp -d)
-xorriso -osirrox on -indev "$ISO" -extract / "$W" 2>/dev/null
-U=()
-while IFS= read -r f; do
-  sed -i "s|${OLD}|${NEW}|g" "$W/$f"
-  U+=(-update "$W/$f" "/$f")
-done < <(cd "$W" && grep -rl "${OLD}" . | sed 's|^\./||')
-if [ -f "$W/images/efiboot.img" ]; then
-  M=$(mktemp -d)
-  sudo mount -o loop,rw "$W/images/efiboot.img" "$M"
-  sudo find "$M" -type f -exec grep -l "${OLD}" {} + 2>/dev/null | xargs -r sudo sed -i "s|${OLD}|${NEW}|g"
-  sudo umount "$M" && rmdir "$M"
-  U+=(-update "$W/images/efiboot.img" /images/efiboot.img)
-fi
-xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
-mv "$ISO.new" "$ISO" && rm -rf "$W"
-
 # Rename the ISO
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
 ```
@@ -125,28 +103,6 @@ sudo podman run \
   --use-librepo=True \
   localhost/tetra:main
 sudo chown -R $USER:$USER ./output
-
-# Rename the installer volume ID
-ISO=./output/bootiso/install.iso
-NEW=Tetra
-OLD=$(xorriso -indev "$ISO" -toc 2>&1 | awk -F"'" '/Volume id/{print $2;exit}')
-[ -n "$OLD" ] || { echo "ERROR: could not read volid from $ISO" >&2; return 1 2>/dev/null || exit 1; }
-W=$(mktemp -d)
-xorriso -osirrox on -indev "$ISO" -extract / "$W" 2>/dev/null
-U=()
-while IFS= read -r f; do
-  sed -i "s|${OLD}|${NEW}|g" "$W/$f"
-  U+=(-update "$W/$f" "/$f")
-done < <(cd "$W" && grep -rl "${OLD}" . | sed 's|^\./||')
-if [ -f "$W/images/efiboot.img" ]; then
-  M=$(mktemp -d)
-  sudo mount -o loop,rw "$W/images/efiboot.img" "$M"
-  sudo find "$M" -type f -exec grep -l "${OLD}" {} + 2>/dev/null | xargs -r sudo sed -i "s|${OLD}|${NEW}|g"
-  sudo umount "$M" && rmdir "$M"
-  U+=(-update "$W/images/efiboot.img" /images/efiboot.img)
-fi
-xorriso -indev "$ISO" -outdev "$ISO.new" -boot_image any replay -volid "$NEW" "${U[@]}"
-mv "$ISO.new" "$ISO" && rm -rf "$W"
 
 # Rename the ISO
 mv ./output/bootiso/install.iso ./output/bootiso/tetra-$(date -u +%Y%m%d).iso
