@@ -3,10 +3,14 @@ Description=Tetra first-boot setup (root label, default flatpaks)
 ConditionPathExists=!/var/lib/tetra-setup-complete
 Wants=network-online.target
 After=network-online.target
+StartLimitIntervalSec=3600
+StartLimitBurst=120
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+Restart=on-failure
+RestartSec=30s
 ExecStartPre=/usr/bin/sh -c 'if [ "$(findmnt -no FSTYPE /var)" = btrfs ] && [ "$(btrfs filesystem label /var)" != tetra ]; then btrfs filesystem label /var tetra; fi'
 ExecStartPre=/usr/bin/flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub \
