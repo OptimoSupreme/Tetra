@@ -5,7 +5,7 @@ RUN echo "tetra" > /etc/hostname && \
     echo "f+ /etc/hostname 0644 root root - tetra" > /usr/lib/tmpfiles.d/10-set-hostname.conf
 
 # Mask unnecessary/broken services in container
-RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service mcelog.service
+RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offline-update.service mcelog.service flatpak-add-fedora-repos.service
 
 # Set Timezone
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
