@@ -16,10 +16,7 @@ env:
   IMAGE_NAME: tetra
   IMAGE_REGISTRY: ghcr.io/optimosupreme
   IMAGE_REF: ghcr.io/optimosupreme/tetra
-  # Temporary opt-out for Node 20 actions after the 2026-06-02 runner default
-  # flips to Node 24. Remove once redhat-actions/* and actions/delete-package-versions
-  # ship Node 24 tagged releases.
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+  BASE_IMAGE: quay.io/fedora/fedora-bootc:44
 
 jobs:
   build-container:
@@ -49,16 +46,36 @@ jobs:
           DATE=$(date -u +%Y%m%d)
           echo "tags=main main-${DATE}" >> "$GITHUB_OUTPUT"
 
+      - name: Pull base image
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if podman pull "${BASE_IMAGE}"; then
+              break
+            fi
+            if [ "$attempt" = "5" ]; then
+              echo "Pull of ${BASE_IMAGE} failed after 5 attempts" >&2
+              exit 1
+            fi
+            delay=$((attempt * 15))
+            echo "Pull of ${BASE_IMAGE} failed, retrying in ${delay}s (attempt $((attempt+1))/5)..." >&2
+            sleep "$delay"
+          done
+
       - name: Build container image
-        uses: redhat-actions/buildah-build@v2
+        # Pinned to the node24 commit on main; redhat-actions has no node24
+        # release tagged yet (latest is v2.13, node20). Revert to @v2.x once cut.
+        uses: redhat-actions/buildah-build@061ffd31bb5c3f8733a6f9bbdf00a9fb02eb708c
         with:
           containerfiles: ./Containerfile
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.meta.outputs.tags }}
           oci: true
+          extra-args: --pull=missing
 
       - name: Log in to GHCR
-        uses: redhat-actions/podman-login@v1
+        # Pinned to the node24 commit on main; no node24 release tagged yet
+        # (latest is v1.7, node20). Revert to @v1.x once cut.
+        uses: redhat-actions/podman-login@2e76993ec4585e058ea832c23ee3d885970936af
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -109,8 +126,24 @@ jobs:
       packages: write
     steps:
       - name: Prune old container versions
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: tetra
-          package-type: container
-          min-versions-to-keep: 30
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PKG: /users/${{ github.repository_owner }}/packages/container/tetra
+          KEEP: 30
+        run: |
+          set -euo pipefail
+          # Pair each version id with its created_at, keep the newest $KEEP
+          # (ISO-8601 sorts chronologically), and delete everything older.
+          gh api --paginate "${PKG}/versions?per_page=100" \
+            --jq '.[] | [.created_at, (.id|tostring)] | @tsv' > versions.tsv
+          ids=$(sort -r versions.tsv | tail -n +$((KEEP + 1)) | cut -f2)
+          if [ -z "$ids" ]; then
+            echo "Nothing to prune (<= ${KEEP} versions)."
+            exit 0
+          fi
+          echo "Pruning $(printf '%s\n' "$ids" | grep -c .) version(s), keeping newest ${KEEP}."
+          printf '%s\n' "$ids" | while read -r id; do
+            [ -n "$id" ] || continue
+            echo "Deleting version ${id}"
+            gh api --method DELETE "${PKG}/versions/${id}"
+          done
