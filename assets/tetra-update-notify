@@ -1,23 +1,45 @@
 #!/bin/bash
 set -eu
 
-bootc status --format json 2>/dev/null | jq -e '.status.staged != null' >/dev/null 2>&1 || exit 0
+# Runs inside the user's own systemd session (see tetra-update-notify.timer)
+# so the "Restart Now" action can reboot via polkit. Clicking it reboots,
+# which applies the staged image. notify-send --wait keeps this process alive
+# to receive the click and blocks until the notification is dismissed or an
+# action is invoked.
+#
+# `bootc status` requires root, so detect a staged update via ostree's
+# world-readable marker, which exists exactly when a deployment is staged.
 
-for runtime_dir in /run/user/*; do
-    [ -d "$runtime_dir" ] || continue
-    uid=${runtime_dir##*/}
-    [[ "$uid" =~ ^[0-9]+$ ]] || continue
-    [ "$uid" -ge 1000 ] || continue
-    [ -S "$runtime_dir/bus" ] || continue
-    user=$(getent passwd "$uid" | cut -d: -f1) || continue
-    [ -n "$user" ] || continue
-    runuser -u "$user" -- env \
-        DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime_dir/bus" \
-        XDG_RUNTIME_DIR="$runtime_dir" \
-        notify-send \
-        --app-name="System Updates" \
-        --icon=system-software-update \
-        --urgency=normal \
-        "System update ready" \
-        "A system update is staged, restart to apply." 2>/dev/null || true
-done
+[ -e /run/ostree/staged-deployment ] || exit 0
+
+# If the user already dismissed a notification, stay quiet until the next
+# morning (08:00) rather than re-prompting on every timer tick.
+snooze_file="${XDG_STATE_HOME:-$HOME/.local/state}/tetra-update-notify/snooze-until"
+snooze_until=$(cat "$snooze_file" 2>/dev/null || true)
+case "$snooze_until" in ''|*[!0-9]*) snooze_until=0 ;; esac
+[ "$(date +%s)" -lt "$snooze_until" ] && exit 0
+
+# urgency=critical makes GNOME show the notification persistently with the
+# action button visible up front (no hover needed).
+action=$(notify-send --wait \
+    --app-name="System Updates" \
+    --icon=system-software-update \
+    --urgency=critical \
+    --action=restart="Restart Now" \
+    "System update ready" \
+    "A system update is staged, restart to apply." 2>/dev/null) || exit 0
+
+# An active local session is permitted to reboot via polkit without a password.
+if [ "$action" = "restart" ]; then
+    exec systemctl reboot
+fi
+
+# Dismissed without restarting: snooze until the next 08:00 so we don't nag
+# again for the rest of the day.
+now=$(date +%s)
+next_morning=$(date -d "08:00" +%s)
+if [ "$now" -ge "$next_morning" ]; then
+    next_morning=$(date -d "tomorrow 08:00" +%s)
+fi
+mkdir -p "$(dirname "$snooze_file")"
+printf '%s\n' "$next_morning" > "$snooze_file"

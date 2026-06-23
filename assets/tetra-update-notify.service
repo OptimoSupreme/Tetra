@@ -1,0 +1,6 @@
+[Unit]
+Description=Notify the user of a staged system update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/tetra-update-notify

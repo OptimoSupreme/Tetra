@@ -151,6 +151,11 @@ COPY assets/bootc-update-timer-override.conf /usr/lib/systemd/system/bootc-fetch
 COPY --chmod=0755 assets/tetra-update-notify /usr/libexec/tetra-update-notify
 RUN systemctl enable bootc-fetch-apply-updates.timer
 
+# Notification for staged updates
+COPY assets/tetra-update-notify.service /usr/lib/systemd/user/tetra-update-notify.service
+COPY assets/tetra-update-notify.timer /usr/lib/systemd/user/tetra-update-notify.timer
+RUN systemctl --global enable tetra-update-notify.timer
+
 LABEL containers.bootc=1
 LABEL org.opencontainers.image.source="https://github.com/OptimoSupreme/Tetra"
 LABEL org.opencontainers.image.description="Tetra — Fedora bootc workstation"
