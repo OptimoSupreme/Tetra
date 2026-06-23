@@ -5,7 +5,6 @@ Description=Periodically check for a staged system update to notify about
 # Relative to the user manager starting (i.e. shortly after login).
 OnStartupSec=2min
 OnUnitInactiveSec=30min
-# Re-check each morning so a dismissed notification reappears the next day.
 OnCalendar=*-*-* 08:00
 
 [Install]

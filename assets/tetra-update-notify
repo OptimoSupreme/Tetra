@@ -20,12 +20,15 @@ case "$snooze_until" in ''|*[!0-9]*) snooze_until=0 ;; esac
 [ "$(date +%s)" -lt "$snooze_until" ] && exit 0
 
 # urgency=critical makes GNOME show the notification persistently with the
-# action button visible up front (no hover needed).
+# action buttons visible up front (no hover needed). The Dismiss button and
+# the built-in close (X) both leave $action unset/non-"restart" and fall
+# through to the snooze below.
 action=$(notify-send --wait \
     --app-name="System Updates" \
     --icon=system-software-update \
     --urgency=critical \
     --action=restart="Restart Now" \
+    --action=dismiss="Dismiss" \
     "System update ready" \
     "A system update is staged, restart to apply." 2>/dev/null) || exit 0
 
@@ -34,8 +37,8 @@ if [ "$action" = "restart" ]; then
     exec systemctl reboot
 fi
 
-# Dismissed without restarting: snooze until the next 08:00 so we don't nag
-# again for the rest of the day.
+# Dismissed (Dismiss button or X) without restarting: snooze until the next
+# 08:00 so we don't nag again for the rest of the day.
 now=$(date +%s)
 next_morning=$(date -d "08:00" +%s)
 if [ "$now" -ge "$next_morning" ]; then
