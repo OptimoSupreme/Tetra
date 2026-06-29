@@ -156,6 +156,11 @@ COPY assets/tetra-update-notify.timer /usr/lib/systemd/user/tetra-update-notify.
 RUN systemctl --global enable tetra-update-notify.timer
 RUN systemctl enable bootc-fetch-apply-updates.timer
 
+COPY assets/tetra-flatpak-update.service /usr/lib/systemd/system/tetra-flatpak-update.service
+COPY assets/tetra-flatpak-update.timer /usr/lib/systemd/system/tetra-flatpak-update.timer
+RUN systemctl enable tetra-flatpak-update.timer
+
+# Image Metadata Labels
 LABEL containers.bootc=1
 LABEL org.opencontainers.image.source="https://github.com/OptimoSupreme/Tetra"
 LABEL org.opencontainers.image.description="Tetra — Fedora bootc workstation"

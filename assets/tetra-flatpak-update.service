@@ -1,0 +1,12 @@
+[Unit]
+Description=Update system Flatpaks
+Documentation=man:flatpak(1)
+Wants=network-online.target
+After=network-online.target
+After=tetra-setup.service
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flatpak update --system --noninteractive --assumeyes
