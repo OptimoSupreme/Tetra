@@ -33,7 +33,7 @@ donation-reminder-enabled=false
 
 [org/gnome/shell]
 favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop']
-app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'org.onlyoffice.desktopeditors.desktop': <{'position': <4>}>, 'com.vixalien.sticky.desktop': <{'position': <5>}>, 'Utilities': <{'position': <6>}>}]
+app-picker-layout=[{'io.github.kolunmi.Bazaar.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'org.onlyoffice.desktopeditors.desktop': <{'position': <4>}>, 'com.vixalien.sticky.desktop': <{'position': <5>}>, 'Utilities': <{'position': <6>}>}]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-panel@jderose9.github.com']
 
 [org/gnome/desktop/app-folders]
@@ -41,13 +41,13 @@ folder-children=['Utilities']
 
 [org/gnome/desktop/app-folders/folders/Utilities]
 name='Utilities'
-apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'net.nokyan.Resources.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'net.nokyan.Resources.desktop', 'org.gnome.Ptyxis.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.Settings.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.Firmware.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
 
 [org/gnome/desktop/search-providers]
-sort-order=['org.gnome.Settings.desktop', 'org.gnome.Software.desktop']
+sort-order=['org.gnome.Settings.desktop']
 disabled=['org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Console.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Ptyxis.desktop']
 
 [org/gnome/desktop/peripherals/mouse]

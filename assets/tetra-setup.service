@@ -14,6 +14,7 @@ RestartSec=30s
 ExecStartPre=/usr/bin/sh -c 'if [ "$(findmnt -no FSTYPE /var)" = btrfs ] && [ "$(btrfs filesystem label /var)" != tetra ]; then btrfs filesystem label /var tetra; fi'
 ExecStartPre=/usr/bin/flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ExecStart=/usr/bin/flatpak install --system --noninteractive --assumeyes flathub \
+    io.github.kolunmi.Bazaar \
     org.onlyoffice.desktopeditors \
     com.vixalien.sticky \
     net.nokyan.Resources \

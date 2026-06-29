@@ -25,6 +25,7 @@ RUN dnf install -y \
         cryptsetup \
         fastfetch \
         git \
+        gnome-firmware \
         gnome-shell-extension-appindicator \
         gnome-shell-extension-blur-my-shell \
         gnome-shell-extension-caffeine \
@@ -49,6 +50,7 @@ RUN dnf install -y \
         gnome-shell-extension-launch-new-instance \
         gnome-shell-extension-places-menu \
         gnome-shell-extension-window-list \
+        gnome-software \
         gnome-system-monitor \
         gnome-tour \
         gnome-weather \
@@ -120,7 +122,7 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf && \
     find /usr/share/icons -name "*fedora-logo-icon*" -exec cp /usr/share/pixmaps/trademark.png {} \;
 
 # Polkit rules
-COPY assets/20-gnome-software-polkit.rules /etc/polkit-1/rules.d/20-gnome-software-polkit.rules
+COPY assets/20-flatpak-polkit.rules /etc/polkit-1/rules.d/20-flatpak-polkit.rules
 
 # Add pam_fprintd to the PAM stack so GDM offers fingerprint auth on machines with a reader
 RUN authselect enable-feature with-fingerprint

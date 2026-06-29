@@ -1,0 +1,9 @@
+// Allow users in the wheel group to perform Flatpak actions without a password prompt.
+
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.freedesktop.Flatpak.") == 0 &&
+        subject.active &&
+        subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});
