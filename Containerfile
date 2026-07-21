@@ -69,8 +69,9 @@ RUN dnf swap -y ffmpeg-free ffmpeg --allowerasing && \
 RUN dnf install -y mesa-va-drivers-freeworld intel-media-driver
 
 # Fastfetch
-RUN git clone https://github.com/OptimoSupreme/fastfetch_config /etc/xdg/fastfetch && \
-    echo '[[ $- == *i* ]] && fastfetch' >> /etc/bashrc
+COPY assets/fastfetch/config.jsonc /etc/xdg/fastfetch/config.jsonc
+COPY assets/fastfetch/logo.txt /etc/xdg/fastfetch/logo.txt
+RUN echo '[[ $- == *i* ]] && fastfetch' >> /etc/bashrc
 
 # Housekeeping
 RUN dnf autoremove -y && \
