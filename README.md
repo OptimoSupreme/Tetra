@@ -6,7 +6,7 @@ This repository contains the configuration and Containerfiles for building Tetra
 
 ## Bootc tools
 
-Installed Tetra systems track `ghcr.io/optimosupreme/tetra:main`, which is rebuilt daily at 07:00 UTC. `bootc-fetch-apply-updates.timer` is enabled by default and checks once a day at 10:00 local time, after the daily build has published. If the machine is off or asleep at 10:00, the check runs once it is awake again (`Persistent=true`).
+Installed Tetra systems track `ghcr.io/optimosupreme/tetra:main`, which is rebuilt daily at 07:00 UTC. `bootc-fetch-apply-updates.timer` is enabled by default and checks once a day at ~10:00 local time, after the daily build has published.
 
 Unlike upstream bootc, Tetra runs `bootc upgrade` **without** `--apply`: updates are staged but never applied automatically, so the system will not reboot on its own interupting work. When a deployment is staged, a notification in your session offers to restart.
 
