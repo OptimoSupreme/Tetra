@@ -106,8 +106,9 @@ RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
     fi
 
 # Configure Gnome
-RUN rm -rf /usr/share/backgrounds/*
+RUN rm -rf /usr/share/backgrounds/* /usr/share/gnome-background-properties/*
 COPY assets/wallpaper.png /usr/share/backgrounds/default.png
+COPY assets/wallpaper.xml /usr/share/gnome-background-properties/tetra.xml
 COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
 COPY assets/gdm-profile /etc/dconf/profile/gdm
