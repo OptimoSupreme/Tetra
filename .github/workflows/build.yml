@@ -61,6 +61,15 @@ jobs:
             sleep "$delay"
           done
 
+      # TEMP FIX: the runner image ships fuse-overlayfs and buildah-build
+      # force-selects it when present, which intermittently corrupts the
+      # image rpmdb (sqlite) during dnf transactions. Removing the binary
+      # makes buildah use native kernel overlayfs. Remove this step once
+      # https://github.com/containers/fuse-overlayfs/issues/475 is resolved.
+      - name: Remove fuse-overlayfs
+        run: |
+          while p=$(command -v fuse-overlayfs 2>/dev/null); do sudo rm -f "$p"; done
+
       - name: Build container image
         uses: redhat-actions/buildah-build@v3.0.2
         with:
