@@ -11,13 +11,9 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
 # Package installs and removals
-# NOTE: pinned to download1 (master) instead of mirrors.rpmfusion.org because
-# us.mirrors.cicku.me is serving stale 44-0.2 release packages with inverted
-# enabled= flags (rawhide on, stable off). Revert to mirrors.rpmfusion.org once
-# resolved upstream. See: https://bugzilla.rpmfusion.org/show_bug.cgi?id=7450
 RUN dnf install -y \
-        https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
     dnf install -y \
         @workstation-product-environment \
         breeze-cursor-theme \

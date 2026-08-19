@@ -62,20 +62,18 @@ jobs:
           done
 
       - name: Build container image
-        # Pinned to the node24 commit on main; redhat-actions has no node24
-        # release tagged yet (latest is v2.13, node20). Revert to @v2.x once cut.
-        uses: redhat-actions/buildah-build@061ffd31bb5c3f8733a6f9bbdf00a9fb02eb708c
+        uses: redhat-actions/buildah-build@v3.0.2
         with:
           containerfiles: ./Containerfile
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.meta.outputs.tags }}
           oci: true
+          # v3 defaults squash to true; keep layers for differential bootc pulls
+          squash: false
           extra-args: --pull=missing
 
       - name: Log in to GHCR
-        # Pinned to the node24 commit on main; no node24 release tagged yet
-        # (latest is v1.7, node20). Revert to @v1.x once cut.
-        uses: redhat-actions/podman-login@2e76993ec4585e058ea832c23ee3d885970936af
+        uses: redhat-actions/podman-login@v2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
