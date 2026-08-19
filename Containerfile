@@ -151,6 +151,7 @@ RUN systemctl enable tetra-setup.service
 
 # Configure updates and notifications
 COPY assets/bootc-update-service-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.service.d/10-tetra.conf
+COPY assets/rpm-ostree-countme-override.conf /usr/lib/systemd/system/rpm-ostree-countme.service.d/10-tetra.conf
 COPY assets/bootc-update-timer-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.timer.d/10-tetra.conf
 COPY --chmod=0755 assets/tetra-update-notify /usr/libexec/tetra-update-notify
 COPY assets/tetra-update-notify.service /usr/lib/systemd/user/tetra-update-notify.service
