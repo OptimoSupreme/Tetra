@@ -92,12 +92,10 @@ RUN sed -i \
     -e '/^SUPPORT_END=/d' \
     /usr/lib/os-release
 
-# Configure Plymouth: custom "tetra" theme (centered logo, no firmware/BGRT background).
-# The spinner throbber frames and password-dialog assets are reused from the stock
-# spinner theme; the cp fails loudly if Fedora ever restructures it.
+# Configure Plymouth & rebuild initramfs
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
 COPY assets/plymouth/tetra.plymouth /usr/share/plymouth/themes/tetra/tetra.plymouth
-COPY assets/plymouth/watermark.png /usr/share/plymouth/themes/tetra/watermark.png
+COPY assets/trademark.png /usr/share/plymouth/themes/tetra/watermark.png
 COPY assets/plymouth/plymouthd.conf /etc/plymouth/plymouthd.conf
 RUN cp /usr/share/plymouth/themes/spinner/throbber-*.png \
        /usr/share/plymouth/themes/spinner/entry.png \
@@ -109,6 +107,11 @@ RUN cp /usr/share/plymouth/themes/spinner/throbber-*.png \
        /usr/share/plymouth/themes/tetra/ && \
     plymouth-set-default-theme --list | grep -qx tetra && \
     [ "$(plymouth-set-default-theme)" = "tetra" ]
+RUN kver=$(basename /usr/lib/modules/*) && \
+    dracut --force --reproducible --no-hostonly --add ostree \
+        /usr/lib/modules/"$kver"/initramfs.img "$kver" && \
+    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouthd$' && \
+    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouth/themes/tetra/tetra.plymouth'
 
 # Configure Gnome
 RUN rm -rf /usr/share/backgrounds/* /usr/share/gnome-background-properties/*
@@ -167,16 +170,6 @@ RUN systemctl enable bootc-fetch-apply-updates.timer
 COPY assets/tetra-flatpak-update.service /usr/lib/systemd/system/tetra-flatpak-update.service
 COPY assets/tetra-flatpak-update.timer /usr/lib/systemd/system/tetra-flatpak-update.timer
 RUN systemctl enable tetra-flatpak-update.timer
-
-# Regenerate the initramfs so plymouth (and the tetra theme) start in early boot.
-# The base image's initrd was built before plymouth was installed, so the splash
-# otherwise can't appear until after switch-root, and the LUKS passphrase fallback
-# would be a bare text prompt. Flags mirror the base image's dracut invocation.
-RUN kver=$(basename /usr/lib/modules/*) && \
-    dracut --force --reproducible --no-hostonly --add ostree \
-        /usr/lib/modules/"$kver"/initramfs.img "$kver" && \
-    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouthd$' && \
-    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouth/themes/tetra/tetra.plymouth'
 
 # Image Metadata Labels
 LABEL containers.bootc=1
