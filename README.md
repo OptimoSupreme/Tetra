@@ -1,12 +1,14 @@
 # Tetra
 
-![Weekly Build](https://github.com/OptimoSupreme/Tetra/actions/workflows/build.yml/badge.svg)
+![Daily Build](https://github.com/OptimoSupreme/Tetra/actions/workflows/build.yml/badge.svg)
 
 This repository contains the configuration and Containerfiles for building Tetra, an atomic Fedora based Linux distribution using `bootc`.
 
 ## Bootc tools
 
-Installed Tetra systems track `ghcr.io/optimosupreme/tetra:main` and pull updates on a weekly timer (`bootc-fetch-apply-updates.timer`, enabled by default).
+Installed Tetra systems track `ghcr.io/optimosupreme/tetra:main`, which is rebuilt daily at 07:00 UTC. `bootc-fetch-apply-updates.timer` is enabled by default and checks once a day at ~10:00 local time, after the daily build has published.
+
+Unlike upstream bootc, Tetra runs `bootc upgrade` **without** `--apply`: updates are staged but never applied automatically, so the system will not reboot on its own interupting work. When a deployment is staged, a notification in your session offers to restart.
 
 ```bash
 sudo bootc status            # see what's installed and what's staged

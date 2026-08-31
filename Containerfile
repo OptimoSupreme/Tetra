@@ -11,13 +11,9 @@ RUN systemctl mask systemd-remount-fs.service packagekit.service packagekit-offl
 RUN ln -fs /usr/share/zoneinfo/US/Eastern /etc/localtime
 
 # Package installs and removals
-# NOTE: pinned to download1 (master) instead of mirrors.rpmfusion.org because
-# us.mirrors.cicku.me is serving stale 44-0.2 release packages with inverted
-# enabled= flags (rawhide on, stable off). Revert to mirrors.rpmfusion.org once
-# resolved upstream. See: https://bugzilla.rpmfusion.org/show_bug.cgi?id=7450
 RUN dnf install -y \
-        https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
     dnf install -y \
         @workstation-product-environment \
         breeze-cursor-theme \
@@ -96,18 +92,31 @@ RUN sed -i \
     -e '/^SUPPORT_END=/d' \
     /usr/lib/os-release
 
-# Configure Plymouth
+# Configure Plymouth & rebuild initramfs
 COPY assets/trademark.png /usr/share/pixmaps/trademark.png
-RUN if [ -d /usr/share/plymouth/themes/spinner ]; then \
-    rm -f /usr/share/plymouth/themes/spinner/watermark.png && \
-    for i in $(seq -w 1 30); do \
-    cp /usr/share/pixmaps/trademark.png /usr/share/plymouth/themes/spinner/throbber-00$i.png || true; \
-    done; \
-    fi
+COPY assets/plymouth/tetra.plymouth /usr/share/plymouth/themes/tetra/tetra.plymouth
+COPY assets/trademark.png /usr/share/plymouth/themes/tetra/watermark.png
+COPY assets/plymouth/plymouthd.conf /etc/plymouth/plymouthd.conf
+RUN cp /usr/share/plymouth/themes/spinner/throbber-*.png \
+       /usr/share/plymouth/themes/spinner/entry.png \
+       /usr/share/plymouth/themes/spinner/lock.png \
+       /usr/share/plymouth/themes/spinner/bullet.png \
+       /usr/share/plymouth/themes/spinner/capslock.png \
+       /usr/share/plymouth/themes/spinner/keyboard.png \
+       /usr/share/plymouth/themes/spinner/keymap-render.png \
+       /usr/share/plymouth/themes/tetra/ && \
+    plymouth-set-default-theme --list | grep -qx tetra && \
+    [ "$(plymouth-set-default-theme)" = "tetra" ]
+RUN kver=$(basename /usr/lib/modules/*) && \
+    dracut --force --reproducible --no-hostonly --add ostree \
+        /usr/lib/modules/"$kver"/initramfs.img "$kver" && \
+    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouthd$' && \
+    lsinitrd /usr/lib/modules/"$kver"/initramfs.img | grep -q 'plymouth/themes/tetra/tetra.plymouth'
 
 # Configure Gnome
-RUN rm -rf /usr/share/backgrounds/*
+RUN rm -rf /usr/share/backgrounds/* /usr/share/gnome-background-properties/*
 COPY assets/wallpaper.png /usr/share/backgrounds/default.png
+COPY assets/wallpaper.xml /usr/share/gnome-background-properties/tetra.xml
 COPY assets/dconf-profile /etc/dconf/profile/user
 COPY assets/dconf-settings /etc/dconf/db/local.d/00-custom
 COPY assets/gdm-profile /etc/dconf/profile/gdm
@@ -150,6 +159,7 @@ RUN systemctl enable tetra-setup.service
 
 # Configure updates and notifications
 COPY assets/bootc-update-service-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.service.d/10-tetra.conf
+COPY assets/rpm-ostree-countme-override.conf /usr/lib/systemd/system/rpm-ostree-countme.service.d/10-tetra.conf
 COPY assets/bootc-update-timer-override.conf /usr/lib/systemd/system/bootc-fetch-apply-updates.timer.d/10-tetra.conf
 COPY --chmod=0755 assets/tetra-update-notify /usr/libexec/tetra-update-notify
 COPY assets/tetra-update-notify.service /usr/lib/systemd/user/tetra-update-notify.service
